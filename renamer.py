@@ -13,6 +13,9 @@ class FileExtensionNotSupported(Exception):
 class NotSameLenghtError(Exception):
     pass
 
+class IndexOutOfRangeError(Exception):
+    pass
+
 
 class OriginalFiles:
     def find_files(self, path):
@@ -48,21 +51,10 @@ class NamesFile:
 
 
 class Renamer:
-    def __init__(self):
-        self.path = ''
-        self.files = []
-        self.names = []
-        self.combine = []
-
-    def input_data(self):
-        path = input(
-            'Enter path to the folder containing your files to be renamed: ')
-        names = input('Enter path to the file containing new file names: ')
-        files = OriginalFiles().find_files(path)
-        names = NamesFile().find_names(names)
+    def __init__(self, path, names):
         self.path = os.path.abspath(path)
-        self.files = files
-        self.names = names
+        self.files = OriginalFiles().find_files(path)
+        self.names = NamesFile().find_names(names)
         self.combine = list(zip(self.files, self.names))
 
     def display(self):
@@ -71,13 +63,15 @@ class Renamer:
 
         len_i = len(str(len(self.files)))
         max_files = max([len(x) for x in self.files])
+        max_names = max([len(x) for x in self.names])
+        display_with = max_files + max_names + len_i + 11
         print()
-        print('RENAMER'.center(15))
-        print('_' * 15)
+        print('!RemaneR'.center(display_with))
+        print('_' * display_with)
         for i, v in enumerate(self.combine, start=1):
             print(str(i).ljust(len_i) + ' _ ' + v[0].ljust(max_files) +
                   ' -----> ' + v[1] + '{}'.format(extension(v[0])))
-        print('_' * 15)
+        print('_' * display_with)
         print()
 
     def rename(self):
@@ -87,6 +81,9 @@ class Renamer:
             os.rename(old, new)
 
     def move(self, now, then):
+        for n in [now, then]:
+            if not 1 <= n <= len(self.combine):
+                raise IndexOutOfRangeError
         self.names.insert(then - 1, self.names.pop(now - 1))
         self.combine = list(zip(self.files, self.names))
 
