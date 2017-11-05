@@ -19,7 +19,7 @@ class OriginalFiles:
         try:
             files = os.listdir(path)
         except FileNotFoundError:
-            print("I can't find such directory")
+            print("Can't find such directory")
         else:
             if files == []:
                 raise EmptyDirectoryError
@@ -61,32 +61,34 @@ class Renamer:
         files = OriginalFiles().find_files(path)
         names = NamesFile().find_names(names)
         self.path = os.path.abspath(path)
-        self.files.extend(files)
-        self.names.extend(names)
+        self.files = files
+        self.names = names
+        self.combine = list(zip(self.files, self.names))
 
     def display(self):
-        if not len(self.files) == len(self.names):
-            raise NotSameLenghtError
+        #if not len(self.files) == len(self.names):
+        #    raise NotSameLenghtError
 
-        self.combine = list(zip(self.files, self.names))
         len_i = len(str(len(self.files)))
         max_files = max([len(x) for x in self.files])
         print()
         print('RENAMER'.center(15))
         print('_' * 15)
         for i, v in enumerate(self.combine, start=1):
-            print(str(i).ljust(len_i) + '_' + v[0].ljust(max_files) +
+            print(str(i).ljust(len_i) + ' _ ' + v[0].ljust(max_files) +
                   ' -----> ' + v[1] + '{}'.format(extension(v[0])))
         print('_' * 15)
+        print()
 
     def rename(self):
         for n in self.combine:
             old = os.path.join(self.path, n[0])
-            new = os.path.join(self.path, n[1])
+            new = os.path.join(self.path, n[1] + extension(n[0]))
             os.rename(old, new)
 
-    def move(self):
-        pass
+    def move(self, now, then):
+        self.names.insert(then - 1, self.names.pop(now - 1))
+        self.combine = list(zip(self.files, self.names))
 
 
 def extension(file_name):
@@ -95,7 +97,7 @@ def extension(file_name):
             return file_name[i:]
 
 
-a = Renamer()
-a.input_data()
-a.display()
-a.rename()
+#a = Renamer()
+#a.input_data()
+#a.display()
+#a.rename()
