@@ -54,9 +54,36 @@ Enter a command:
             print('*')
 
     def input_new_data(self):
-        path = input(
-            'Enter path to the folder containing your files to be renamed: ')
-        names = input('Enter path to the file containing new file names: ')
+        path = ''
+        names = ''
+        while True:
+            try:
+                ask_path = input(
+                'Enter path to the folder containing your files to be renamed: ')
+                renamer.check_path_to_files(path)
+            except renamer.PathDoesNotExistError:
+                print('\n--That path does not seem to exist!--\n')
+            except renamer.DirectoryNotFoundError:
+                print('\n--Directory not found!--\n')
+            except renamer.EmptyDirectoryError:
+                print('\n--This directory is empty!--\n')
+            else:
+                path = ask_path
+                break
+        while True:
+            try:
+                ask_names = input(
+                    'Enter path to the file containing new file names: ')
+                renamer.check_names_file(names)
+            except renamer.PathDoesNotExistError:
+                print("\n--This path does not seem to exist!--\n")
+            except renamer.FileDoesNotExistError as e:
+                print("\n--Can't find file {}!--\n".format(e.filename))
+            except renamer.FileExtensionNotSupported:
+                print("\n--This file extension is not supported!--\n")
+            else:
+                names = ask_names
+                break
         self.data = renamer.Renamer(path, names)
 
     def preview(self):

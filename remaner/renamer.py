@@ -1,10 +1,21 @@
-import sys
 import os
 import textract
 from itertools import zip_longest
 
 
+class PathDoesNotExistError(Exception):
+    pass
+
+
 class EmptyDirectoryError(Exception):
+    pass
+
+
+class DirectoryNotFoundError(Exception):
+    pass
+
+
+class FileDoesNotExistError(Exception):
     pass
 
 
@@ -20,44 +31,64 @@ class IndexOutOfRangeError(Exception):
     pass
 
 
-class OriginalFiles:
-    def find_files(self, path):
+def check_path_to_files(path):
+    if not os.path.exists(path):
+        raise PathDoesNotExistError
+    try:
+        files = os.listdir(path)
+    except FileNotFoundError:
+        raise DirectoryNotFoundError
+    else:
+        if files == []:
+            raise EmptyDirectoryError
+        else:
+            return True
+
+
+def check_names_file(path_to_file):
+    path = os.path.abspath(path_to_file)
+    filename = os.path.split(path_to_file)[1]
+    if not os.path.exists(path):
+        raise PathDoesNotExistError
+    if not os.path.isfile(path_to_file):
+        raise FileDoesNotExistError(filename)
+    try:
+        textract.process(path_to_file).decode('utf8')
+    except textract.exceptions.ExtensionNotSupported:
+        raise FileExtensionNotSupported
+    else:
+        return True
+
+
+class InputCheckExtract:
+    def files_to_rename(self, path):
         try:
             files = os.listdir(path)
         except FileNotFoundError:
-            print("Can't find such directory")
+            raise DirectoryNotFoundError
         else:
             if files == []:
                 raise EmptyDirectoryError
             else:
                 return files
 
-
-class NamesFile:
-    def find_names(self, path_to_filename):
+    def names_file(self, path_to_filename):
         path_to_filename = os.path.abspath(path_to_filename)
-        filename = os.path.split(path_to_filename)[1]
-        try:
-            names = textract.process(path_to_filename).decode('utf8')
+        names = textract.process(path_to_filename).decode('utf8')
+        if '\n' in names:
+            names = names.splitlines()
+        if ',' in names:
+            names = names.split(',')
 
-        except textract.exceptions.MissingFileError:
-            print("Can't find file {}".format(filename))
-
-        else:
-            if '\n' in names:
-                names = names.splitlines()
-            if ',' in names:
-                names = names.split(',')
-
-            names = [name.strip() for name in names if not name == '']
-            return names
+        names = [name.strip() for name in names if not name == '']
+        return names
 
 
 class Renamer:
     def __init__(self, path, names):
         self.path = os.path.abspath(path)
-        self.files = OriginalFiles().find_files(path)
-        self.names = NamesFile().find_names(names)
+        self.files = InputCheckExtract.files_to_rename(path)
+        self.names = InputCheckExtract.names_file(names)
         self.pairs = list(zip_longest(self.files, self.names, fillvalue='-*-'))
 
         self.len_f = len(self.files)
@@ -65,9 +96,6 @@ class Renamer:
         self.index_width = len(str(len(self.files)))
 
     def display(self):
-        #if not len(self.files) == len(self.names):
-        #    raise NotSameLenghtError
-
         max_files = max([len(x) for x in self.files])
         max_names = max([len(x) for x in self.names])
         display_with = max_files + max_names + self.index_width + 11
