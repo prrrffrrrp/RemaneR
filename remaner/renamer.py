@@ -87,8 +87,8 @@ class InputCheckExtract:
 class Renamer:
     def __init__(self, path, names):
         self.path = os.path.abspath(path)
-        self.files = InputCheckExtract.files_to_rename(path)
-        self.names = InputCheckExtract.names_file(names)
+        self.files = InputCheckExtract().files_to_rename(path)
+        self.names = InputCheckExtract().names_file(names)
         self.pairs = list(zip_longest(self.files, self.names, fillvalue='-*-'))
 
         self.len_f = len(self.files)

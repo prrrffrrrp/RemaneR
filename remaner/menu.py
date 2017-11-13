@@ -60,7 +60,7 @@ Enter a command:
             try:
                 ask_path = input(
                 'Enter path to the folder containing your files to be renamed: ')
-                renamer.check_path_to_files(path)
+                renamer.check_path_to_files(ask_path)
             except renamer.PathDoesNotExistError:
                 print('\n--That path does not seem to exist!--\n')
             except renamer.DirectoryNotFoundError:
@@ -74,7 +74,7 @@ Enter a command:
             try:
                 ask_names = input(
                     'Enter path to the file containing new file names: ')
-                renamer.check_names_file(names)
+                renamer.check_names_file(ask_names)
             except renamer.PathDoesNotExistError:
                 print("\n--This path does not seem to exist!--\n")
             except renamer.FileDoesNotExistError as e:
