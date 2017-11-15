@@ -119,11 +119,13 @@ class Renamer:
     def sort_files(self, sort_method):
         if sort_method not in ['1', '2', '3']:
             raise NotAValidOption
+        if sort_method == '3':
+            return  # to do: back to original sort
         if sort_method == '1':
             order = False
         if sort_method == '2':
             order = True
-        self.files = sorted(self.files, reverse=order)
+        self.files = sorted(self.files, key=natural_key, reverse=order)
         self.pairs = list(zip_longest(self.files, self.names, fillvalue='-*-'))
 
     def rename(self):
@@ -150,3 +152,9 @@ def extension(file_name, new_name=None):
     for i, v in enumerate(file_name):
         if v == '.':
             return file_name[i:]
+
+
+def natural_key(string_):
+    ''' Allows human sorting. See Natural Sorting Algorithm.'''
+    import re
+    return [int(s) if s.isdigit() else s for s in re.split(r'(\d+)', string_)]
