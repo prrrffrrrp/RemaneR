@@ -31,6 +31,10 @@ class IndexOutOfRangeError(Exception):
     pass
 
 
+class NotAValidOption(Exception):
+    pass
+
+
 def check_path_to_files(path):
     if not os.path.exists(path):
         raise PathDoesNotExistError
@@ -112,8 +116,15 @@ class Renamer:
         print('_' * display_with)
         print()
 
-    def sort_files(self, sort_method='asc'):
-        pass
+    def sort_files(self, sort_method):
+        if sort_method not in ['1', '2', '3']:
+            raise NotAValidOption
+        if sort_method == '1':
+            order = False
+        if sort_method == '2':
+            order = True
+        self.files = sorted(self.files, reverse=order)
+        self.pairs = list(zip_longest(self.files, self.names, fillvalue='-*-'))
 
     def rename(self):
         for n in self.pairs:
