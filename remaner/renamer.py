@@ -93,11 +93,14 @@ class Renamer:
         self.path = os.path.abspath(path)
         self.files = InputCheckExtract().files_to_rename(path)
         self.names = InputCheckExtract().names_file(names)
-        self.pairs = list(zip_longest(self.files, self.names, fillvalue='-*-'))
-
+        self.pairs = self.pairing()
+        # self.pairs = list(zip_longest(self.files, self.names, fillvalue='-*-'))
         self.len_f = len(self.files)
         self.len_n = len(self.names)
         self.index_width = len(str(len(self.files)))
+
+    def pairing(self):
+        return list(zip_longest(self.files, self.names, fillvalue='-*-'))
 
     def display(self):
         max_files = max([len(x) for x in self.files])
@@ -126,7 +129,6 @@ class Renamer:
         if sort_method == '2':
             order = True
         self.files = sorted(self.files, key=natural_key, reverse=order)
-        self.pairs = list(zip_longest(self.files, self.names, fillvalue='-*-'))
 
     def rename(self):
         for n in self.pairs:
