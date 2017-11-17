@@ -11,6 +11,7 @@ Options:
     -i, --interactive   : open menu with options
 '''
 
+import os
 from docopt import docopt
 import renamer
 
@@ -21,9 +22,10 @@ class Editor:
         self.menu_map = {
             "1": self.preview,
             "2": self.change_position,
-            "3": self.apply_rename,
-            "4": self.input_new_data,
-            "5": self.quit
+            "3": self.sort_files,
+            "4": self.apply_rename,
+            "5": self.input_new_data,
+            "6": self.quit
         }
 
     def menu(self):
@@ -31,7 +33,7 @@ class Editor:
             print('''
 \n!RemaneR\n
 ''')
-            start = self.menu_map["4"]
+            start = self.menu_map["5"]
             start()
             answer = ''
             while True:
@@ -39,9 +41,10 @@ class Editor:
 Enter a command:
 \t 1\t-Preview changes
 \t 2\t-Move a new name up or down in the list
-\t 3\t-Apply changes
-\t 4\t-Input new files directory or names file
-\t 5\t-Quit
+\t 3\t-Sort files (ascending, descending)
+\t 4\t-Apply changes
+\t 5\t-Input new files directory or names file
+\t 6\t-Quit
 """)
                 answer = input("Enter a command number: ")
                 try:
@@ -54,10 +57,40 @@ Enter a command:
             print('*')
 
     def input_new_data(self):
-        path = input(
-            'Enter path to the folder containing your files to be renamed: ')
-        names = input('Enter path to the file containing new file names: ')
-        self.data = renamer.Renamer(path, names)
+        files = []
+        path = ''
+        names = []
+        while True:
+            try:
+                ask_path = input('Enter path to the folder containing'
+                                 'your files to be renamed: ')
+                check_files = renamer.InputCheckExtract().files_to_rename(ask_path)
+            except renamer.PathDoesNotExistError:
+                print('\n--That path does not seem to exist!--\n')
+            except renamer.DirectoryNotFoundError:
+                print('\n--Directory not found!--\n')
+            except renamer.EmptyDirectoryError:
+                print('\n--This directory is empty!--\n')
+            else:
+                files = check_files
+                path = os.path.abspath(ask_path)
+                break
+        while True:
+            try:
+                ask_names = input(
+                    'Enter path to the file containing new file names: ')
+                check_names = renamer.InputCheckExtract().names_file(ask_names)
+            except renamer.PathDoesNotExistError:
+                print("\n--This path does not seem to exist!--\n")
+            except renamer.FileDoesNotExistError as e:
+                print("\n--Can't find file {}!--\n".format(e.filename))
+            except renamer.FileExtensionNotSupported:
+                print("\n--This file extension is not supported!--\n")
+            else:
+                names = check_names
+                break
+        self.data = renamer.Renamer(files, names)
+        self.data.path = path
 
     def preview(self):
         self.data.display()
@@ -71,6 +104,23 @@ Enter a command:
             print('\n', '#' * 10, ' Index out of range. Try again. ', '#' * 10)
             func = self.menu_map['2']
             func()
+
+    def sort_files(self):
+        sort_method = ''
+        while True:
+            print('''
+Choose an option:
+\t 1\t-Ascending order
+\t 2\t-Descending order
+\t 3\t-Leave it as is
+''')
+            sort_method = input("Enter a command number: ")
+            try:
+                self.data.sort_files(sort_method)
+            except renamer.NotAValidOption:
+                print('{} is not a valid option'.format(sort_method))
+            else:
+                break
 
     def apply_rename(self):
         self.data.rename()
