@@ -74,8 +74,6 @@ class Renamer:
     def __init__(self, files, names):
         self.files = files
         self.names = names
-        self.len_f = len(self.files)
-        self.len_n = len(self.names)
         self.index_width = len(str(len(self.files)))
         self.path = ''
 
@@ -96,10 +94,7 @@ class Renamer:
         self._names = names_val
 
     def pairs(self):
-        if self.len_f == self.len_n:
-            pairs = list(zip(self.files, self.names))
-        else:
-            pairs = list(zip_longest(self.files, self.names, fillvalue='-*-'))
+        pairs = list(zip_longest(self.files, self.names, fillvalue='-*-'))
         return pairs
 
     def display(self):
@@ -139,8 +134,10 @@ class Renamer:
             os.rename(old, new)
 
     def move(self, now, then):
-        if self.len_n < self.len_f:
-            self.names.extend(['-*-'] * (self.len_f - self.len_n))
+        len_f = len(self.files)
+        len_n = len(self.names)
+        if len_n < len_f:
+            self.names = self.names + ['-*-'] * (len_f - len_n)
         for n in [now, then]:
             if not 1 <= n <= len(self.pairs()):
                 raise IndexOutOfRangeError

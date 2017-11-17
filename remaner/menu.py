@@ -54,7 +54,7 @@ Enter a command:
                 else:
                     func()
         finally:
-            print('*')
+            print('\n--Thanks for using RemaneR!--\n')
 
     def input_new_data(self):
         files = []
@@ -62,7 +62,7 @@ Enter a command:
         names = []
         while True:
             try:
-                ask_path = input('Enter path to the folder containing'
+                ask_path = input('Enter path to the folder containing '
                                  'your files to be renamed: ')
                 check_files = renamer.InputCheckExtract().files_to_rename(
                                                                        ask_path)
@@ -102,9 +102,11 @@ Enter a command:
         try:
             self.data.move(int(now), int(then))
         except renamer.IndexOutOfRangeError:
-            print('\n', '#' * 10, ' Index out of range. Try again. ', '#' * 10)
+            print('\n--Index out of range. Try again.--\n')
             func = self.menu_map['2']
             func()
+        else:
+            print("\n--Name position changed--\n")
 
     def sort_files(self):
         sort_method = ''
@@ -121,14 +123,14 @@ Choose an option:
             except renamer.NotAValidOption:
                 print('{} is not a valid option'.format(sort_method))
             else:
+                print("\n--Files sorted!--\n")
                 break
 
     def apply_rename(self):
         self.data.rename()
-        print('\n', '#' * 10, ' Files renamed ', '#' * 10)
+        print('\n--Files renamed!--\n')
 
     def quit(self):
-        print('\n', '#' * 10, 'Thanks for using !RemaneR', '#' * 10)
         raise SystemExit()
 
 
@@ -139,6 +141,10 @@ if __name__ == "__main__":
     names = args['<names>']
 
     if args['--rename']:
+        files = renamer.InputCheckExtract().files_to_rename(path)
+        names = renamer.InputCheckExtract().names_file(names)
+        absolute_path = os.path.abspath(path)
+        renamer.Renamer().path = absolute_path
         renamer.Renamer(path, names).rename()
 
     elif args['--interactive']:
