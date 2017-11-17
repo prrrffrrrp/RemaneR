@@ -144,8 +144,10 @@ if __name__ == "__main__":
         files = renamer.InputCheckExtract().files_to_rename(path)
         names = renamer.InputCheckExtract().names_file(names)
         absolute_path = os.path.abspath(path)
-        renamer.Renamer().path = absolute_path
-        renamer.Renamer(path, names).rename()
+        task = renamer.Renamer(files, names)
+        task.path = absolute_path
+        task.rename()
+        print("\n--Files renamed!--\n--Thanks for using RemaneR!--\n")
 
     elif args['--interactive']:
         Editor().menu()
