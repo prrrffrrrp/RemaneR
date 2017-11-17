@@ -35,37 +35,10 @@ class NotAValidOption(Exception):
     pass
 
 
-def check_path_to_files(path):
-    if not os.path.exists(path):
-        raise PathDoesNotExistError
-    try:
-        files = os.listdir(path)
-    except FileNotFoundError:
-        raise DirectoryNotFoundError
-    else:
-        if files == []:
-            raise EmptyDirectoryError
-        else:
-            return True
-
-
-def check_names_file(path_to_file):
-    path = os.path.abspath(path_to_file)
-    filename = os.path.split(path_to_file)[1]
-    if not os.path.exists(path):
-        raise PathDoesNotExistError
-    if not os.path.isfile(path_to_file):
-        raise FileDoesNotExistError(filename)
-    try:
-        textract.process(path_to_file).decode('utf8')
-    except textract.exceptions.ExtensionNotSupported:
-        raise FileExtensionNotSupported
-    else:
-        return True
-
-
 class InputCheckExtract:
     def files_to_rename(self, path):
+        if not os.path.exists(path):
+            raise PathDoesNotExistError
         try:
             files = os.listdir(path)
         except FileNotFoundError:
@@ -76,31 +49,58 @@ class InputCheckExtract:
             else:
                 return files
 
-    def names_file(self, path_to_filename):
-        path_to_filename = os.path.abspath(path_to_filename)
-        names = textract.process(path_to_filename).decode('utf8')
-        if '\n' in names:
-            names = names.splitlines()
-        if ',' in names:
-            names = names.split(',')
+    def names_file(self, path_to_file):
+        path = os.path.abspath(path_to_file)
+        filename = os.path.split(path_to_file)[1]
+        if not os.path.exists(path):
+            raise PathDoesNotExistError
+        if not os.path.isfile(path_to_file):
+            raise FileDoesNotExistError(filename)
+        try:
+            names = textract.process(path_to_file).decode('utf8')
+        except textract.exceptions.ExtensionNotSupported:
+            raise FileExtensionNotSupported
+        else:
+            if '\n' in names:
+                names = names.splitlines()
+            if ',' in names:
+                names = names.split(',')
 
         names = [name.strip() for name in names if not name == '']
         return names
 
 
 class Renamer:
-    def __init__(self, path, names):
-        self.path = os.path.abspath(path)
-        self.files = InputCheckExtract().files_to_rename(path)
-        self.names = InputCheckExtract().names_file(names)
-        self.pairs = self.pairing()
-        # self.pairs = list(zip_longest(self.files, self.names, fillvalue='-*-'))
+    def __init__(self, files, names):
+        self.files = files
+        self.names = names
         self.len_f = len(self.files)
         self.len_n = len(self.names)
         self.index_width = len(str(len(self.files)))
+        self.path = ''
 
-    def pairing(self):
-        return list(zip_longest(self.files, self.names, fillvalue='-*-'))
+    @property
+    def files(self):
+        return self._files
+
+    @files.setter
+    def files(self, files_val):
+        self._files = files_val
+
+    @property
+    def names(self):
+        return self._names
+
+    @names.setter
+    def names(self, names_val):
+        self._names = names_val
+
+    def pairs(self):
+        if self.len_f == self.len_n:
+            pairs = list(zip(self.files, self.names))
+        else:
+            pairs = list(zip_longest(self.files, self.names, fillvalue='-*-'))
+        return pairs
 
     def display(self):
         max_files = max([len(x) for x in self.files])
@@ -109,7 +109,7 @@ class Renamer:
         print()
         print('!RemaneR'.center(display_with))
         print('_' * display_with)
-        for i, v in enumerate(self.pairs, start=1):
+        for i, v in enumerate(self.pairs(), start=1):
             print(str(i).ljust(self.index_width) +
                   ' _ ' +
                   v[0].ljust(max_files) +
@@ -123,7 +123,7 @@ class Renamer:
         if sort_method not in ['1', '2', '3']:
             raise NotAValidOption
         if sort_method == '3':
-            return  # to do: back to original sort
+            return                          # to do: back to original sort
         if sort_method == '1':
             order = False
         if sort_method == '2':
@@ -131,7 +131,7 @@ class Renamer:
         self.files = sorted(self.files, key=natural_key, reverse=order)
 
     def rename(self):
-        for n in self.pairs:
+        for n in self.pairs():
             if '-*-' in n:
                 continue
             old = os.path.join(self.path, n[0])
@@ -142,10 +142,11 @@ class Renamer:
         if self.len_n < self.len_f:
             self.names.extend(['-*-'] * (self.len_f - self.len_n))
         for n in [now, then]:
-            if not 1 <= n <= len(self.pairs):
+            if not 1 <= n <= len(self.pairs()):
                 raise IndexOutOfRangeError
-        self.names.insert(then - 1, self.names.pop(now - 1))
-        self.pairs = list(zip(self.files, self.names))
+        names_cp = self.names
+        names_cp.insert(then - 1, names_cp.pop(now - 1))
+        self.names = names_cp
 
 
 def extension(file_name, new_name=None):

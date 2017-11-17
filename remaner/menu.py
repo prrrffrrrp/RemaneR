@@ -11,6 +11,7 @@ Options:
     -i, --interactive   : open menu with options
 '''
 
+import os
 from docopt import docopt
 import renamer
 
@@ -56,13 +57,15 @@ Enter a command:
             print('*')
 
     def input_new_data(self):
+        files = []
         path = ''
-        names = ''
+        names = []
         while True:
             try:
-                ask_path = input(
-                'Enter path to the folder containing your files to be renamed: ')
-                renamer.check_path_to_files(ask_path)
+                ask_path = input('Enter path to the folder containing'
+                                 'your files to be renamed: ')
+                check_files = renamer.InputCheckExtract().files_to_rename(
+                                                                       ask_path)
             except renamer.PathDoesNotExistError:
                 print('\n--That path does not seem to exist!--\n')
             except renamer.DirectoryNotFoundError:
@@ -70,13 +73,14 @@ Enter a command:
             except renamer.EmptyDirectoryError:
                 print('\n--This directory is empty!--\n')
             else:
-                path = ask_path
+                files = check_files
+                path = os.path.abspath(ask_path)
                 break
         while True:
             try:
                 ask_names = input(
                     'Enter path to the file containing new file names: ')
-                renamer.check_names_file(ask_names)
+                check_names = renamer.InputCheckExtract().names_file(ask_names)
             except renamer.PathDoesNotExistError:
                 print("\n--This path does not seem to exist!--\n")
             except renamer.FileDoesNotExistError as e:
@@ -84,9 +88,10 @@ Enter a command:
             except renamer.FileExtensionNotSupported:
                 print("\n--This file extension is not supported!--\n")
             else:
-                names = ask_names
+                names = check_names
                 break
-        self.data = renamer.Renamer(path, names)
+        self.data = renamer.Renamer(files, names)
+        self.data.path = path
 
     def preview(self):
         self.data.display()
