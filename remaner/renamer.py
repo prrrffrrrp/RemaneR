@@ -45,7 +45,8 @@ class Renamer:
     def __init__(self, files, names):
         self.files = files
         self.names = names
-        self.index_width = len(str(len(self.files)))
+        self.index_width = max((len(str(len(self.files)))),
+                               (len(str(len(self.names)))))
         self.path = ''
 
     @property
