@@ -121,6 +121,8 @@ class Renamer:
 def extension(file_name, new_name=None):
     if new_name == '-*-':
         return ''
+    elif file_name == '-*-':
+        return ''
     for i, v in enumerate(file_name):
         if v == '.':
             return file_name[i:]
