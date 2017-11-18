@@ -123,8 +123,8 @@ def extension(file_name, new_name=None):
         return ''
     elif file_name == '-*-':
         return ''
-    for i, v in enumerate(file_name):
-        if v == '.':
+    for i in range(len(file_name)-1, 0, -1):
+        if file_name[i] == '.':
             return file_name[i:]
 
 
