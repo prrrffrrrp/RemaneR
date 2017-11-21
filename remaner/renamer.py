@@ -1,7 +1,7 @@
 import os
 import textract
 from itertools import zip_longest
-from exceptions import PathDoesNotExistError, EmptyDirectoryError,\
+from .exceptions import PathDoesNotExistError, EmptyDirectoryError,\
     DirectoryNotFoundError, FileDoesNotExistError, FileExtensionNotSupported,\
     IndexOutOfRangeError, NotAValidOption
 
@@ -119,13 +119,12 @@ class Renamer:
 
 
 def extension(file_name, new_name=None):
-    if new_name == '-*-':
-        return ''
-    elif file_name == '-*-':
+    if file_name == '-*-' or new_name == '-*-':
         return ''
     for i in range(len(file_name)-1, 0, -1):
         if file_name[i] == '.':
             return file_name[i:]
+    return ''
 
 
 def natural_key(string_):
