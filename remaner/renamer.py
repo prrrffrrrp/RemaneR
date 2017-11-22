@@ -18,6 +18,7 @@ class InputCheckExtract:
             if files == []:
                 raise EmptyDirectoryError
             else:
+                files.sort()
                 return files
 
     def names_file(self, path_to_file):
