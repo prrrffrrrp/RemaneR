@@ -1,7 +1,7 @@
 import os
 import textract
 from itertools import zip_longest
-from .exceptions import PathDoesNotExistError, EmptyDirectoryError,\
+from exceptions import PathDoesNotExistError, EmptyDirectoryError,\
     DirectoryNotFoundError, FileDoesNotExistError, FileExtensionNotSupported,\
     IndexOutOfRangeError, NotAValidOption
 
