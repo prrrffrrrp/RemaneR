@@ -1,5 +1,6 @@
 import os
 import shutil
+import pytest
 from renamer import InputCheckExtract, Renamer, extension, natural_key
 
 
@@ -37,6 +38,20 @@ class TestInputCheckExtract:
         txt_ext = self.temp_test_dir_names + os.sep + 'names.txt'
         names = ['orange', 'lemon', 'apple', 'plum', 'banana']
         assert InputCheckExtract().names_file(txt_ext) == names
+
+
+class TestRenamer:
+    @pytest.fixture(scope='class')
+    def renamer_obj(self):
+        files = ['f_1.txt', 'f_2.txt', 'f_3.txt', 'f_4.txt', 'f_5.txt']
+        names = ['orange', 'lemon', 'apple', 'plum', 'banana']
+        renamer_obj = Renamer(files, names)
+        return renamer_obj
+
+    def test_Renamer_self(self):
+        assert len(self.renamer_obj().files) == 5
+        assert len(self.renamer_obj().names) == 5
+        assert self.renamer_obj().index_width == 1
 
 
 def test_extension():
