@@ -12,8 +12,13 @@ Options:
 '''
 
 import os
+from colorama import init, Fore, Back, Style
 from docopt import docopt
 import renamer
+
+
+# colorama boilerplate
+init(autoreset=True)
 
 
 class Editor:
@@ -30,7 +35,7 @@ class Editor:
 
     def menu(self):
         try:
-            print('''
+            print(Fore.CYAN + '''
 \n!RemaneR\n
 ''')
             start = self.menu_map["5"]
@@ -50,11 +55,11 @@ Enter a command:
                 try:
                     func = self.menu_map[answer]
                 except KeyError:
-                    print("{} is not a valid option".format(answer))
+                    print(Fore.RED + "--{} is not a valid option--".format(answer))
                 else:
                     func()
         finally:
-            print('\n--Thanks for using RemaneR!--\n')
+            print(Fore.CYAN + '\n--Thanks for using RemaneR!--\n')
 
     def input_new_data(self):
         files = []
@@ -67,11 +72,11 @@ Enter a command:
                 check_files = renamer.InputCheckExtract().files_to_rename(
                                                                        ask_path)
             except renamer.PathDoesNotExistError:
-                print('\n--That path does not seem to exist!--\n')
+                print(Fore.RED + '\n--That path does not seem to exist!--\n')
             except renamer.DirectoryNotFoundError:
-                print('\n--Directory not found!--\n')
+                print(Fore.RED + '\n--Directory not found!--\n')
             except renamer.EmptyDirectoryError:
-                print('\n--This directory is empty!--\n')
+                print(Fore.RED + '\n--This directory is empty!--\n')
             else:
                 files = check_files
                 path = os.path.abspath(ask_path)
@@ -82,11 +87,11 @@ Enter a command:
                     'Enter path to the file containing new file names: ')
                 check_names = renamer.InputCheckExtract().names_file(ask_names)
             except renamer.PathDoesNotExistError:
-                print("\n--This path does not seem to exist!--\n")
+                print(Fore.RED + "\n--This path does not seem to exist!--\n")
             except renamer.FileDoesNotExistError as e:
-                print("\n--Can't find file {}!--\n".format(e.filename))
+                print(Fore.RED + "\n--Can't find file {}!--\n".format(e.filename))
             except renamer.FileExtensionNotSupported:
-                print("\n--This file extension is not supported!--\n")
+                print(Fore.RED + "\n--This file extension is not supported!--\n")
             else:
                 names = check_names
                 break
@@ -102,11 +107,11 @@ Enter a command:
         try:
             self.data.move(int(now), int(then))
         except renamer.IndexOutOfRangeError:
-            print('\n--Index out of range. Try again.--\n')
+            print(Fore.RED + '\n--Index out of range. Try again.--\n')
             func = self.menu_map['2']
             func()
         else:
-            print("\n--Name position changed--\n")
+            print(Fore.GREEN + "\n--Name position changed--\n")
 
     def sort_files(self):
         sort_method = ''
@@ -121,14 +126,14 @@ Choose an option:
             try:
                 self.data.sort_files(sort_method)
             except renamer.NotAValidOption:
-                print('{} is not a valid option'.format(sort_method))
+                print(Fore.RED + '{} is not a valid option'.format(sort_method))
             else:
-                print("\n--Files sorted!--\n")
+                print(Fore.GREEN + "\n--Files sorted!--\n")
                 break
 
     def apply_rename(self):
         self.data.rename()
-        print('\n--Files renamed!--\n')
+        print(Fore.GREEN + '\n--Files renamed!--\n')
 
     def quit(self):
         raise SystemExit()
