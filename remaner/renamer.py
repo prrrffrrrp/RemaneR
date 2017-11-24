@@ -1,7 +1,7 @@
 import os
 import textract
 from itertools import zip_longest
-from .exceptions import PathDoesNotExistError, EmptyDirectoryError,\
+from exceptions import PathDoesNotExistError, EmptyDirectoryError,\
     DirectoryNotFoundError, FileDoesNotExistError, FileExtensionNotSupported,\
     IndexOutOfRangeError, NotAValidOption
 
@@ -18,6 +18,7 @@ class InputCheckExtract:
             if files == []:
                 raise EmptyDirectoryError
             else:
+                files.sort()
                 return files
 
     def names_file(self, path_to_file):
