@@ -1,6 +1,7 @@
 import os
 import textract
 from itertools import zip_longest
+from color_variables import display_1, display_2, end_fore
 from exceptions import PathDoesNotExistError, EmptyDirectoryError,\
     DirectoryNotFoundError, FileDoesNotExistError, FileExtensionNotSupported,\
     IndexOutOfRangeError, NotAValidOption
@@ -73,18 +74,18 @@ class Renamer:
     def display(self):
         max_files = max([len(x) for x in self.files])
         max_names = max([len(x) for x in self.names])
-        display_with = max_files + max_names + self.index_width + 11
+        display_width = max_files + max_names + self.index_width + 15
         print()
-        print('!RemaneR'.center(display_with))
-        print('_' * display_with)
+        print(display_1 + '!RemaneR'.center(display_width))
+        print(display_1 + ('_' * display_width))
         for i, v in enumerate(self.pairs(), start=1):
             print(str(i).ljust(self.index_width) +
-                  ' _ ' +
+                  display_1 + ' _ ' + end_fore +
                   v[0].ljust(max_files) +
-                  ' -----> ' +
+                  display_1 + ' -----> ' + end_fore +
                   v[1] +
                   '{}'.format(extension(v[0], v[1])))
-        print('_' * display_with)
+        print(display_1 + '_' * display_width)
         print()
 
     def sort_files(self, sort_method):

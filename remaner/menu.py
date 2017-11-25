@@ -12,13 +12,10 @@ Options:
 '''
 
 import os
-from colorama import init, Fore, Back, Style
 from docopt import docopt
 import renamer
-
-
-# colorama boilerplate
-init(autoreset=True)
+from color_variables import allgood, warning, draw_command_arrow, display_1, \
+    display_2, end_fore
 
 
 class Editor:
@@ -35,31 +32,33 @@ class Editor:
 
     def menu(self):
         try:
-            print(Fore.CYAN + '''
-\n!RemaneR\n
+            print(display_1 + '''
+\n\t!RemaneR\n
 ''')
             start = self.menu_map["5"]
             start()
             answer = ''
             while True:
-                print("""
-Enter a command:
-\t 1\t-Preview changes
-\t 2\t-Move a new name up or down in the list
-\t 3\t-Sort files (ascending, descending)
-\t 4\t-Apply changes
-\t 5\t-Input new files directory or names file
-\t 6\t-Quit
+                print(display_1 + """
+Menu options:
+\t""" + display_2 + ' 1 ' + end_fore + """-Preview changes
+\t""" + display_2 + ' 2 ' + end_fore + """-Move a new name up or down in the list
+\t""" + display_2 + ' 3 ' + end_fore + """-Sort files (ascending, descending)
+\t""" + display_2 + ' 4 ' + end_fore + """-Apply changes
+\t""" + display_2 + ' 5 ' + end_fore + """-Input new files directory or names file
+\t""" + display_2 + ' 6 ' + end_fore + """-Quit
 """)
+                draw_command_arrow()
                 answer = input("Enter a command number: ")
                 try:
                     func = self.menu_map[answer]
                 except KeyError:
-                    print(Fore.RED + "--{} is not a valid option--".format(answer))
+                    print(warning +
+                          "\n-- {} is not a valid option--".format(answer))
                 else:
                     func()
         finally:
-            print(Fore.CYAN + '\n--Thanks for using RemaneR!--\n')
+            print(display_1 + '\n\tThanks for using !RemaneR\n')
 
     def input_new_data(self):
         files = []
@@ -67,31 +66,34 @@ Enter a command:
         names = []
         while True:
             try:
+                draw_command_arrow()
                 ask_path = input('Enter path to the folder containing '
                                  'your files to be renamed: ')
                 check_files = renamer.InputCheckExtract().files_to_rename(
                                                                        ask_path)
             except renamer.PathDoesNotExistError:
-                print(Fore.RED + '\n--That path does not seem to exist!--\n')
+                print(warning + '\n--That path does not seem to exist!--\n')
             except renamer.DirectoryNotFoundError:
-                print(Fore.RED + '\n--Directory not found!--\n')
+                print(warning + '\n--Directory not found!--\n')
             except renamer.EmptyDirectoryError:
-                print(Fore.RED + '\n--This directory is empty!--\n')
+                print(warning + '\n--This directory is empty!--\n')
             else:
                 files = check_files
                 path = os.path.abspath(ask_path)
                 break
         while True:
             try:
+                draw_command_arrow()
                 ask_names = input(
                     'Enter path to the file containing new file names: ')
                 check_names = renamer.InputCheckExtract().names_file(ask_names)
             except renamer.PathDoesNotExistError:
-                print(Fore.RED + "\n--This path does not seem to exist!--\n")
+                print(warning + "\n--This path does not seem to exist!--\n")
             except renamer.FileDoesNotExistError as e:
-                print(Fore.RED + "\n--Can't find file {}!--\n".format(e.filename))
+                print(warning +
+                      "\n--Can't find file {}!--\n".format(e.filename))
             except renamer.FileExtensionNotSupported:
-                print(Fore.RED + "\n--This file extension is not supported!--\n")
+                print(warning + "\n--This file extension is not supported!--\n")
             else:
                 names = check_names
                 break
@@ -102,38 +104,43 @@ Enter a command:
         self.data.display()
 
     def change_position(self):
-        now = input("\nEnter the origin index number: ")
+        print()
+        draw_command_arrow()
+        now = input("Enter the origin index number: ")
+        draw_command_arrow()
         then = input("Enter the destination index number: ")
         try:
             self.data.move(int(now), int(then))
         except renamer.IndexOutOfRangeError:
-            print(Fore.RED + '\n--Index out of range. Try again.--\n')
+            print(warning + '\n--Index out of range. Try again.--\n')
             func = self.menu_map['2']
             func()
         else:
-            print(Fore.GREEN + "\n--Name position changed--\n")
+            print(allgood + "\n--Name position changed--\n")
 
     def sort_files(self):
         sort_method = ''
         while True:
-            print('''
-Choose an option:
-\t 1\t-Ascending order
-\t 2\t-Descending order
-\t 3\t-Leave it as is
-''')
+            print(display_1 + """
+Sort files method:
+\t""" + display_2 + ' 1 ' + end_fore + """-Ascending order
+\t""" + display_2 + ' 2 ' + end_fore + """-Descending order
+\t""" + display_2 + ' 3 ' + end_fore + """-Leave it as is
+""")
+            draw_command_arrow()
             sort_method = input("Enter a command number: ")
             try:
                 self.data.sort_files(sort_method)
             except renamer.NotAValidOption:
-                print(Fore.RED + '{} is not a valid option'.format(sort_method))
+                print(warning +
+                      '\n-- {} is not a valid option--'.format(sort_method))
             else:
-                print(Fore.GREEN + "\n--Files sorted!--\n")
+                print(allgood + "\n--Files sorted!--\n")
                 break
 
     def apply_rename(self):
         self.data.rename()
-        print(Fore.GREEN + '\n--Files renamed!--\n')
+        print(allgood + '\n--Files renamed!--\n')
 
     def quit(self):
         raise SystemExit()
@@ -152,7 +159,8 @@ if __name__ == "__main__":
         task = renamer.Renamer(files, names)
         task.path = absolute_path
         task.rename()
-        print("\n--Files renamed!--\n--Thanks for using RemaneR!--\n")
+        print(display_1 + "\n--Files renamed!--" +
+              display_1 + "\n\tThanks for using !RemaneR\n")
 
     elif args['--interactive']:
         Editor().menu()
