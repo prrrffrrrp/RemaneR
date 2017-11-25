@@ -139,8 +139,12 @@ Sort files method:
                 break
 
     def apply_rename(self):
-        self.data.rename()
-        print(allgood + '\n--Files renamed!--\n')
+        try:
+            self.data.rename()
+        except:
+            print(warning + "\n--Can't rename files!--")
+        else:
+            print(allgood + '\n--Files renamed!--\n')
 
     def quit(self):
         raise SystemExit()
@@ -153,14 +157,25 @@ if __name__ == "__main__":
     names = args['<names>']
 
     if args['--rename']:
-        files = renamer.InputCheckExtract().files_to_rename(path)
-        names = renamer.InputCheckExtract().names_file(names)
+        try:
+            files = renamer.InputCheckExtract().files_to_rename(path)
+        except:
+            print(warning + '\n--Files to be renamed not found--')
+        try:
+            names = renamer.InputCheckExtract().names_file(names)
+        except:
+            print(warning +
+                  '\n--File containing names not found or not supported--')
         absolute_path = os.path.abspath(path)
         task = renamer.Renamer(files, names)
         task.path = absolute_path
-        task.rename()
-        print(display_1 + "\n--Files renamed!--" +
-              display_1 + "\n\tThanks for using !RemaneR\n")
+        try:
+            task.rename()
+        except:
+            print(warning + "\n--Can't rename files!--")
+        else:
+            print(display_1 + "\n--Files renamed!--" +
+                  display_1 + "\n\tThanks for using !RemaneR\n")
 
     elif args['--interactive']:
         Editor().menu()
