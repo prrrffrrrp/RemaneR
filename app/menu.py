@@ -1,5 +1,5 @@
 import os
-import renamer
+import app.renamer as renamer
 from .color_variables import allgood, warning, draw_command_arrow, display_1, \
      display_2, end_fore
 
