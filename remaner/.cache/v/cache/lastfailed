@@ -1,0 +1,9 @@
+{
+  "test_remaner.py": true,
+  "test_remaner.py::TestInputCheckExtract": true,
+  "test_remaner.py::TestRenamer": true,
+  "tests/test_remaner.py": true,
+  "tests/test_remaner.py::TestInputCheckExtract::()": true,
+  "tests/test_remaner.py::TestRenamer::()": true,
+  "tests/test_remaner.py::test_extension": true
+}

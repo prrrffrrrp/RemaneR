@@ -15,7 +15,7 @@ import os
 from docopt import docopt
 import renamer
 from color_variables import allgood, warning, draw_command_arrow, display_1, \
-    display_2, end_fore
+     display_2, end_fore
 
 
 class Editor:
@@ -141,10 +141,13 @@ Sort files method:
     def apply_rename(self):
         try:
             self.data.rename()
-        except:
-            print(warning + "\n--Can't rename files!--")
+        except renamer.FileNameAlreadyExists as e:
+            print(warning + "\nCan't complete rename operation."
+                  "\nFilename {} already exist and would be overriden.".
+                  format(e.args[0]))
         else:
-            print(allgood + '\n--Files renamed!--\n')
+            print(allgood + '\n--Files successfully renamed!--\n')
+            self.quit()
 
     def quit(self):
         raise SystemExit()

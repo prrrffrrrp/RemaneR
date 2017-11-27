@@ -24,3 +24,7 @@ class IndexOutOfRangeError(Exception):
 
 class NotAValidOption(Exception):
     pass
+
+
+class FileNameAlreadyExists(Exception):
+    pass
