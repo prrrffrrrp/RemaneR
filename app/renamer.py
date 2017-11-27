@@ -1,8 +1,8 @@
 import os
 import textract
 from itertools import zip_longest
-from color_variables import display_1, end_fore
-from exceptions import PathDoesNotExistError, EmptyDirectoryError,\
+from .color_variables import display_1, end_fore
+from .exceptions import PathDoesNotExistError, EmptyDirectoryError,\
     DirectoryNotFoundError, FileDoesNotExistError, FileExtensionNotSupported,\
     IndexOutOfRangeError, NotAValidOption, FileNameAlreadyExists
 

@@ -1,6 +1,6 @@
 import os
 import renamer
-from color_variables import allgood, warning, draw_command_arrow, display_1, \
+from .color_variables import allgood, warning, draw_command_arrow, display_1, \
      display_2, end_fore
 
 
