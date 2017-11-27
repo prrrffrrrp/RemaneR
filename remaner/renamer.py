@@ -1,10 +1,10 @@
 import os
 import textract
 from itertools import zip_longest
-from color_variables import display_1, display_2, end_fore
+from color_variables import display_1, end_fore
 from exceptions import PathDoesNotExistError, EmptyDirectoryError,\
     DirectoryNotFoundError, FileDoesNotExistError, FileExtensionNotSupported,\
-    IndexOutOfRangeError, NotAValidOption
+    IndexOutOfRangeError, NotAValidOption, FileNameAlreadyExists
 
 
 class InputCheckExtract:
@@ -36,7 +36,7 @@ class InputCheckExtract:
         else:
             if '\n' in names:
                 names = names.splitlines()
-            if ',' in names:
+            elif ',' in names:
                 names = names.split(',')
 
         names = [name.strip() for name in names if not name == '']
@@ -100,12 +100,30 @@ class Renamer:
         self.files = sorted(self.files, key=natural_key, reverse=order)
 
     def rename(self):
+        temp_names = []
         for n in self.pairs():
+
             if '-*-' in n:
                 continue
+
             old = os.path.join(self.path, n[0])
             new = os.path.join(self.path, n[1] + extension(n[0]))
+            new_n = os.path.basename(new)
+            # Avoid accidental overide
+            if old != new and new_n in self.files:
+                # raise FileNameAlreadyExists(os.path.basename(new))
+                index = self.names.index(n[1])
+                new += '_temp'
+                temp_names.append((index, new))
+                os.rename(old, new)
+
             os.rename(old, new)
+
+        if temp_names:
+            for temp in temp_names:
+                old = temp
+                new = old[:-5]
+                os.rename(old, new)
 
     def move(self, now, then):
         len_f = len(self.files)
