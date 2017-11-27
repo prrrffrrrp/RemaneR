@@ -1,7 +1,7 @@
 import os
 import shutil
 import pytest
-from ..renamer import InputCheckExtract, Renamer, extension, natural_key
+from renamer import InputCheckExtract, Renamer, extension, natural_key
 
 
 absolute = os.getcwd()

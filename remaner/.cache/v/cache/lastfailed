@@ -2,8 +2,10 @@
   "test_remaner.py": true,
   "test_remaner.py::TestInputCheckExtract": true,
   "test_remaner.py::TestRenamer": true,
-  "tests/test_remaner.py": true,
-  "tests/test_remaner.py::TestInputCheckExtract::()": true,
-  "tests/test_remaner.py::TestRenamer::()": true,
+  "tests/test_remaner.py::TestInputCheckExtract": true,
+  "tests/test_remaner.py::TestInputCheckExtract::()::test_files_to_rename": true,
+  "tests/test_remaner.py::TestInputCheckExtract::()::test_names_file": true,
+  "tests/test_remaner.py::TestRenamer": true,
+  "tests/test_remaner.py::TestRenamer::()::test_Renamer_self": true,
   "tests/test_remaner.py::test_extension": true
 }
