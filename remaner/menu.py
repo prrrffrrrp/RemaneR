@@ -1,18 +1,4 @@
-'''
-Usage: menu.py <path> <names> (-r)
-       menu.py -i
-       menu.py -h
-
-Options:
-    -h, --help           : show help page
-    path                : path to files to be renamed
-    names               : path to the file containing list of names
-    -r, --rename        : apply rename operation
-    -i, --interactive   : open menu with options
-'''
-
 import os
-from docopt import docopt
 import renamer
 from color_variables import allgood, warning, draw_command_arrow, display_1, \
      display_2, end_fore
@@ -151,34 +137,3 @@ Sort files method:
 
     def quit(self):
         raise SystemExit()
-
-
-if __name__ == "__main__":
-    args = docopt(__doc__)
-
-    path = args['<path>']
-    names = args['<names>']
-
-    if args['--rename']:
-        try:
-            files = renamer.InputCheckExtract().files_to_rename(path)
-        except:
-            print(warning + '\n--Files to be renamed not found--')
-        try:
-            names = renamer.InputCheckExtract().names_file(names)
-        except:
-            print(warning +
-                  '\n--File containing names not found or not supported--')
-        absolute_path = os.path.abspath(path)
-        task = renamer.Renamer(files, names)
-        task.path = absolute_path
-        try:
-            task.rename()
-        except:
-            print(warning + "\n--Can't rename files!--")
-        else:
-            print(display_1 + "\n--Files renamed!--" +
-                  display_1 + "\n\tThanks for using !RemaneR\n")
-
-    elif args['--interactive']:
-        Editor().menu()
