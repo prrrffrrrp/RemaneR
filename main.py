@@ -14,9 +14,9 @@ Options:
 
 import os
 from docopt import docopt
-from renamer import InputCheckExtract, Renamer
-from menu import Editor
-from color_variables import warning, display_1
+from app.renamer import InputCheckExtract, Renamer
+from app.menu import Editor
+from app.color_variables import warning, display_1
 
 
 if __name__ == "__main__":
