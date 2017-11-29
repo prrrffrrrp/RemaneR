@@ -112,12 +112,11 @@ class Renamer:
             # Avoid accidental overide
             if old != new and new_n in self.files:
                 # raise FileNameAlreadyExists(os.path.basename(new))
-                index = self.names.index(n[1])
                 new += '_temp'
-                temp_names.append((index, new))
+                temp_names.append(new)
                 os.rename(old, new)
-
-            os.rename(old, new)
+            else:
+                os.rename(old, new)
 
         if temp_names:
             for temp in temp_names:

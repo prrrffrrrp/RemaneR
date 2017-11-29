@@ -5,6 +5,9 @@ from .color_variables import allgood, warning, draw_command_arrow, display_1, \
 
 
 class Editor:
+    '''
+    Class Editor contains the interactive cli interface.
+    '''
     def __init__(self):
         self.data = ()
         self.menu_map = {
@@ -17,6 +20,9 @@ class Editor:
         }
 
     def menu(self):
+        '''
+        Shows the main menu options until the program is stopped.
+        '''
         try:
             print(display_1 + '''
 \n\t!RemaneR\n
@@ -47,6 +53,12 @@ Menu options:
             print(display_1 + '\n\tThanks for using !RemaneR\n')
 
     def input_new_data(self):
+        '''
+        Asks for the paths leading to the files to be renamed and to the file
+        containing the new names.
+        Then checks for validity, extracts the data and creates a Renamer
+        object.
+        '''
         files = []
         path = ''
         names = []
@@ -87,9 +99,18 @@ Menu options:
         self.data.path = path
 
     def preview(self):
+        '''
+        Triggers the display method showing a preview of a list of
+        files to be renamed side by side with the new names.
+        '''
         self.data.display()
 
     def change_position(self):
+        '''
+        Allows changing the position of name items in the names list.
+        The user needs to enter the original index number of the item
+        and the index number of the new item's position in the names list.
+        '''
         print()
         draw_command_arrow()
         now = input("Enter the origin index number: ")
@@ -105,6 +126,10 @@ Menu options:
             print(allgood + "\n--Name position changed--\n")
 
     def sort_files(self):
+        '''
+        Allows sorting the files to be renamed list.
+        The default is ascending alpha-numeric order.
+        '''
         sort_method = ''
         while True:
             print(display_1 + """
