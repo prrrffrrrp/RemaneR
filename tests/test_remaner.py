@@ -2,6 +2,7 @@ import os
 import shutil
 import pytest
 from app.renamer import InputCheckExtract, Renamer, extension, natural_key
+from app.exceptions import DuplicateNamesError
 
 
 absolute = os.getcwd()
@@ -36,16 +37,35 @@ class TestInputCheckExtract:
         assert InputCheckExtract().files_to_rename(path2) == files
 
     def test_names_file(self):
-        txt_ext = temp_test_dir_names + os.sep + 'names.txt'
+        txt_file = temp_test_dir_names + os.sep + 'names.txt'
         names = ['orange', 'lemon', 'apple', 'plum', 'banana']
-        assert InputCheckExtract().names_file(txt_ext) == names
+        assert InputCheckExtract().names_file(txt_file) == names
+
+
+class TestInputCheckExtractDuplicates:
+    def setup_method(self, method):
+        with open(os.path.join(
+                  temp_test_dir_names + os.sep + 'names.txt'), 'a') as names:
+            names.write(', lemon')
+
+    def teardown_method(self, method):
+        with open(os.path.join(
+                    temp_test_dir_names + os.sep + 'names.txt'), 'w') as names:
+            names.write('orange, lemon, apple, plum, banana')
+
+    def test_duplicate_names(self):
+        txt_file = temp_test_dir_names + os.sep + 'names.txt'
+        with pytest.raises(DuplicateNamesError) as excinfo:
+            InputCheckExtract().names_file(txt_file)
+        assert "lemon" in str(excinfo.value)
 
 
 class TestRenamer:
     @pytest.fixture(scope='class')
     def renamer_obj(self):
-        files = ['f_1.txt', 'f_2.txt', 'f_3.txt', 'f_4.txt', 'f_5.txt']
-        names = ['orange', 'lemon', 'apple', 'plum', 'banana']
+        txt_file = temp_test_dir_names + os.sep + 'names.txt'
+        files = InputCheckExtract().files_to_rename(temp_test_dir_files)
+        names = InputCheckExtract().names_file(txt_file)
         renamer_obj = Renamer(files, names)
         return renamer_obj
 
