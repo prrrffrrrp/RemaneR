@@ -92,6 +92,12 @@ Menu options:
                       "\n--Can't find file {}!--\n".format(e.filename))
             except renamer.FileExtensionNotSupported:
                 print(warning + "\n--This file extension is not supported!--\n")
+            except renamer.DuplicateNamesError as e:
+                print(warning +
+                      "\n--Name <{}> was found at least twice in the list"
+                      "\nThis could lead to overriding files and loosing data"
+                      "\nPlease make changes to avoid having duplicate names--"
+                      .format(e.args[0]))
             else:
                 names = check_names
                 break
@@ -127,7 +133,7 @@ Menu options:
 
     def sort_files(self):
         '''
-        Allows sorting the files to be renamed list.
+        Allows sorting the list of files to be renamed.
         The default is ascending alpha-numeric order.
         '''
         sort_method = ''
@@ -150,6 +156,9 @@ Sort files method:
                 break
 
     def apply_rename(self):
+        '''
+        Changes the name of the files.
+        '''
         try:
             self.data.rename()
         except renamer.FileNameAlreadyExists as e:
@@ -161,4 +170,7 @@ Sort files method:
             self.quit()
 
     def quit(self):
+        '''
+        Exits the program.
+        '''
         raise SystemExit()

@@ -26,5 +26,5 @@ class NotAValidOption(Exception):
     pass
 
 
-class FileNameAlreadyExists(Exception):
+class DuplicateNamesError(Exception):
     pass

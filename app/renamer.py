@@ -4,7 +4,7 @@ from itertools import zip_longest
 from .color_variables import display_1, end_fore
 from .exceptions import PathDoesNotExistError, EmptyDirectoryError,\
     DirectoryNotFoundError, FileDoesNotExistError, FileExtensionNotSupported,\
-    IndexOutOfRangeError, NotAValidOption, FileNameAlreadyExists
+    IndexOutOfRangeError, NotAValidOption, DuplicateNamesError
 
 
 class InputCheckExtract:
@@ -30,17 +30,30 @@ class InputCheckExtract:
         if not os.path.isfile(path_to_file):
             raise FileDoesNotExistError(filename)
         try:
-            names = textract.process(path_to_file).decode('utf8')
+            names = set()
+            extract = textract.process(path_to_file).decode('utf8')
         except textract.exceptions.ExtensionNotSupported:
             raise FileExtensionNotSupported
         else:
-            if '\n' in names:
-                names = names.splitlines()
-            elif ',' in names:
-                names = names.split(',')
-
-        names = [name.strip() for name in names if not name == '']
-        return names
+            if '\n' in extract:
+                extract = extract.splitlines()
+            if ',' in extract:
+                extract = extract.split(',')
+            if len(extract) == 1:
+                # In case there is only one line with a \n at the end of it
+                # example- names.txt: f1, f2, f3\n
+                # in which case names becomes a list with a single item:
+                # example- names=['f1, f2, f3']
+                # in which case there is nothing to split with ','.
+                if ',' in extract[0]:
+                    extract = extract[0].split(',')
+            extract = [name.strip() for name in extract if not name == '']
+            for name in extract:
+                if name not in names:
+                    names.add(name)
+                else:
+                    raise DuplicateNamesError(name)
+            return extract
 
 
 class Renamer:
