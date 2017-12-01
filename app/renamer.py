@@ -1,14 +1,24 @@
 import os
 import textract
 from itertools import zip_longest
-from .color_variables import display_1, end_fore
+from .color_variables import cyan, end_fore
 from .exceptions import PathDoesNotExistError, EmptyDirectoryError,\
     DirectoryNotFoundError, FileDoesNotExistError, FileExtensionNotSupported,\
     IndexOutOfRangeError, NotAValidOption, DuplicateNamesError
 
 
 class InputCheckExtract:
+    '''
+    Checks user input (paths and files) for validity and extracts data.
+    '''
     def files_to_rename(self, path):
+        '''
+        The path argument should contain the path to the files that
+        the user wants to rename.
+        The method checks that the path exists and that the
+        directory is not empty. Returns a sorted list of files.
+        '''
+
         if not os.path.exists(path):
             raise PathDoesNotExistError
         try:
@@ -23,6 +33,23 @@ class InputCheckExtract:
                 return files
 
     def names_file(self, path_to_file):
+        '''
+        The path to file argument should contain the path and the
+        full name (with the extension) of the file that contains
+        the list of names that we want to use to rename the files
+        listed by the files_to_rename rename method.
+        The file containing names can be of any type that is supported
+        by the textract module. However, the only formats that have been
+        tested so far are:
+            -.xlsx with a single column of data.
+            -.docx, .odt and .txt formats containing words separated
+            by a coma or by a next lign character.
+        The names_file method checks that the path and file exist,
+        that the extension is supported by the textract library and
+        that there are no duplicated names in the names list (what
+        could lead to file overriding).
+        Returns a list.
+        '''
         path = os.path.abspath(path_to_file)
         filename = os.path.split(path_to_file)[1]
         if not os.path.exists(path):
@@ -57,7 +84,15 @@ class InputCheckExtract:
 
 
 class Renamer:
+    '''
+    Class that contains all the core features that allow to manipulate
+    the data entered by the user.
+    '''
     def __init__(self, files, names):
+        '''
+        Initializes an instance with a list of files and a list of names that
+        can be both subjected to changes.
+        '''
         self.files = files
         self.names = names
         self.index_width = max((len(str(len(self.files)))),
@@ -81,27 +116,44 @@ class Renamer:
         self._names = names_val
 
     def pairs(self):
+        '''
+        Creates a list of tuples.
+        In each tuple there is a file name and a new name that will
+        replace the former.
+        If the the two lists (files and names) are not of equal length,
+        when one of the lists reaches its end, a fill value is used
+        that artifitially extends it allowing tuples to continue to be
+        formed and expose all the items of either lists.
+        '''
         pairs = list(zip_longest(self.files, self.names, fillvalue='-*-'))
         return pairs
 
     def display(self):
+        '''
+        Offers a visualization of the existing files and their new names.
+        The new names appear with the same file extension that existing
+        files have.
+        '''
         max_files = max([len(x) for x in self.files])
         max_names = max([len(x) for x in self.names])
         display_width = max_files + max_names + self.index_width + 15
         print()
-        print(display_1 + '!RemaneR'.center(display_width))
-        print(display_1 + ('_' * display_width))
+        print(cyan + '!RemaneR'.center(display_width))
+        print(cyan + ('_' * display_width))
         for i, v in enumerate(self.pairs(), start=1):
             print(str(i).ljust(self.index_width) +
-                  display_1 + ' _ ' + end_fore +
+                  cyan + ' _ ' + end_fore +
                   v[0].ljust(max_files) +
-                  display_1 + ' -----> ' + end_fore +
+                  cyan + ' -----> ' + end_fore +
                   v[1] +
                   '{}'.format(extension(v[0], v[1])))
-        print(display_1 + '_' * display_width)
+        print(cyan + '_' * display_width)
         print()
 
     def sort_files(self, sort_method):
+        '''
+        Allows sorting current files in various ways. TO DO: make it clear.
+        '''
         if sort_method not in ['1', '2', '3']:
             raise NotAValidOption
         if sort_method == '3':
@@ -113,6 +165,16 @@ class Renamer:
         self.files = sorted(self.files, key=natural_key, reverse=order)
 
     def rename(self):
+        '''
+        Calls the self.pairs method and changes the name of the files.
+        Doesn't do anything if the self.pairs tuple contains a fill
+        value instead of a rightfull (file, name) pair.
+        When a file new name is detected to exist already in the current
+        files list, the new name is not applied directly to avoid file
+        overriding. Instead, a temporary name is given to that file.
+        The definitive name is applied when the rest of files have been
+        renamed.
+        '''
         temp_names = []
         for n in self.pairs():
 
@@ -138,6 +200,11 @@ class Renamer:
                 os.rename(old, new)
 
     def move(self, now, then):
+        '''
+        Allows changing the position of items in the names list.
+        It will result in the creation of new (file, name) tuples in
+        the pairs list.
+        '''
         len_f = len(self.files)
         len_n = len(self.names)
         if len_n < len_f:
@@ -151,6 +218,11 @@ class Renamer:
 
 
 def extension(file_name, new_name=None):
+    '''
+    Detects the extension of the current file.
+    It can be used to add the same extension to the new name that
+    will be given to the current file.
+    '''
     if file_name == '-*-' or new_name == '-*-':
         return ''
     for i in range(len(file_name)-1, 0, -1):

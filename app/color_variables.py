@@ -1,16 +1,13 @@
-from colorama import init, Fore, Back, Style
+from colorama import init, Fore
 
 
 # colorama boilerplate
 init(autoreset=True)
 
 # colorama variables
-warning = Fore.LIGHTRED_EX
-allgood = Fore.LIGHTGREEN_EX
-display_1 = Fore.CYAN
-display_2 = Fore.MAGENTA
+magenta = Fore.MAGENTA
+cyan = Fore.CYAN
 end_fore = Fore.RESET
-end_back = Back.RESET
 
 
 def draw_command_arrow():
