@@ -6,6 +6,8 @@ from .color_variables import cyan, magenta, draw_command_arrow, end_fore
 class Editor:
     '''
     Class Editor contains the interactive cli interface.
+    Its methods often just trigger the Renamer class methods
+    but also handle all the exceptions.
     '''
     def __init__(self):
         self.data = ()
