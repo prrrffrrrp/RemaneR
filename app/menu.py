@@ -135,7 +135,7 @@ Menu options:
     def sort_files(self):
         '''
         Allows sorting the list of files to be renamed.
-        The default is ascending alpha-numeric order.
+        The default is alphabetical order.
         '''
         sort_method = ''
         while True:

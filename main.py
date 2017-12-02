@@ -1,7 +1,7 @@
 '''
-Usage: menu.py <path> <names> (-r)
-       menu.py -i
-       menu.py -h
+Usage: main.py <path> <names> (-r)
+       main.py -i
+       main.py -h
 
 Options:
     -h, --help           : show help page
@@ -43,7 +43,7 @@ if __name__ == "__main__":
         except:
             print(magenta + "\n--Can't rename files!--")
         else:
-            print(cyan + "\n--Files renamed!--" +
+            print(cyan + "\n--Files succesfully renamed!--\n" +
                   cyan + "\n\tThanks for using !RemaneR\n")
 
     elif args['--interactive']:

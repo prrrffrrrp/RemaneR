@@ -152,7 +152,12 @@ class Renamer:
 
     def sort_files(self, sort_method):
         '''
-        Allows sorting current files in various ways. TO DO: make it clear.
+        Allows changing the way current files are sorted.
+        The options are:
+            1-Alphabetical ascending order
+            2-Alphabetical descending order
+            3-ASCII ascending order
+            4-ASCII descending order
         '''
         if sort_method not in ['1', '2', '3', '4']:
             raise NotAValidOption
