@@ -16,7 +16,7 @@ class InputCheckExtract:
         The path argument should contain the path to the files that
         the user wants to rename.
         The method checks that the path exists and that the
-        directory is not empty. Returns a sorted list of files.
+        directory is not empty. Returns an alfabetically ordered list of files.
         '''
 
         if not os.path.exists(path):
@@ -29,7 +29,7 @@ class InputCheckExtract:
             if files == []:
                 raise EmptyDirectoryError
             else:
-                files.sort()
+                files = sorted(files, key=natural_key)
                 return files
 
     def names_file(self, path_to_file):
@@ -154,15 +154,21 @@ class Renamer:
         '''
         Allows sorting current files in various ways. TO DO: make it clear.
         '''
-        if sort_method not in ['1', '2', '3']:
+        if sort_method not in ['1', '2', '3', '4']:
             raise NotAValidOption
-        if sort_method == '3':
-            return                          # to do: back to original sort
         if sort_method == '1':
+            key = natural_key
             order = False
         if sort_method == '2':
+            key = natural_key
             order = True
-        self.files = sorted(self.files, key=natural_key, reverse=order)
+        if sort_method == '3':
+            key = None
+            order = False
+        if sort_method == '4':
+            key = None
+            order = True
+        self.files = sorted(self.files, key=key, reverse=order)
 
     def rename(self):
         '''
@@ -234,4 +240,5 @@ def extension(file_name, new_name=None):
 def natural_key(string_):
     ''' Allows human sorting. See Natural Sorting Algorithm.'''
     import re
-    return [int(s) if s.isdigit() else s for s in re.split(r'(\d+)', string_)]
+    return [int(s) if s.isdigit() else s.lower() for s in re.split(r'(\d+)',
+                                                                   string_)]

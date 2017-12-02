@@ -16,7 +16,7 @@ import os
 from docopt import docopt
 from app.renamer import InputCheckExtract, Renamer
 from app.menu import Editor
-from app.color_variables import warning, display_1
+from app.color_variables import magenta, cyan
 
 
 if __name__ == "__main__":
@@ -29,11 +29,11 @@ if __name__ == "__main__":
         try:
             files = InputCheckExtract().files_to_rename(path)
         except:
-            print(warning + '\n--Files to be renamed not found--')
+            print(magenta + '\n--Files to be renamed not found--')
         try:
             names = InputCheckExtract().names_file(names)
         except:
-            print(warning +
+            print(magenta +
                   '\n--File containing names not found or not supported--')
         absolute_path = os.path.abspath(path)
         task = Renamer(files, names)
@@ -41,10 +41,10 @@ if __name__ == "__main__":
         try:
             task.rename()
         except:
-            print(warning + "\n--Can't rename files!--")
+            print(magenta + "\n--Can't rename files!--")
         else:
-            print(display_1 + "\n--Files renamed!--" +
-                  display_1 + "\n\tThanks for using !RemaneR\n")
+            print(cyan + "\n--Files renamed!--" +
+                  cyan + "\n\tThanks for using !RemaneR\n")
 
     elif args['--interactive']:
         Editor().menu()

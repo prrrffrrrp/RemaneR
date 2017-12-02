@@ -141,9 +141,10 @@ Menu options:
         while True:
             print(cyan + """
 Sort files method:
-\t""" + magenta + ' 1 ' + end_fore + """-Ascending order
-\t""" + magenta + ' 2 ' + end_fore + """-Descending order
-\t""" + magenta + ' 3 ' + end_fore + """-Leave it as is
+\t""" + magenta + ' 1 ' + end_fore + """-Alphabetical ascending order
+\t""" + magenta + ' 2 ' + end_fore + """-Alphabetical descending order
+\t""" + magenta + ' 3 ' + end_fore + """-ASCII ascending order
+\t""" + magenta + ' 4 ' + end_fore + """-ASCII descending order
 """)
             draw_command_arrow()
             sort_method = input("Enter a command number: ")
