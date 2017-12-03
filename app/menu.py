@@ -14,10 +14,11 @@ class Editor:
         self.menu_map = {
             "1": self.preview,
             "2": self.change_position,
-            "3": self.sort_files,
-            "4": self.apply_rename,
-            "5": self.input_new_data,
-            "6": self.quit
+            "3": self.add_suffix_menu,
+            "4": self.sort_files,
+            "5": self.apply_rename,
+            "6": self.input_new_data,
+            "7": self.quit
         }
 
     def menu(self):
@@ -36,10 +37,11 @@ class Editor:
 Menu options:
 \t""" + magenta + ' 1 ' + end_fore + """-Preview changes
 \t""" + magenta + ' 2 ' + end_fore + """-Move a new name up or down in the list
-\t""" + magenta + ' 3 ' + end_fore + """-Sort files (ascending, descending)
-\t""" + magenta + ' 4 ' + end_fore + """-Apply changes
-\t""" + magenta + ' 5 ' + end_fore + """-Input new files directory or names file
-\t""" + magenta + ' 6 ' + end_fore + """-Quit
+\t""" + magenta + ' 3 ' + end_fore + """-Add a suffix to new names
+\t""" + magenta + ' 4 ' + end_fore + """-Sort files (ascending, descending)
+\t""" + magenta + ' 5 ' + end_fore + """-Rename
+\t""" + magenta + ' 6 ' + end_fore + """-Input new files directory or names file
+\t""" + magenta + ' 7 ' + end_fore + """-Quit
 """)
                 draw_command_arrow()
                 answer = input("Enter a command number: ")
@@ -131,6 +133,30 @@ Menu options:
             func()
         else:
             print(cyan + "\n--Name position changed--\n")
+
+    def add_suffix_menu(self):
+        '''
+        Menu interface for the Renamer.add_suffix method.
+        Allows adding a suffix to new names.
+        '''
+        draw_command_arrow()
+        suffix = input("Enter a suffix: ")
+        while True:
+            print(cyan + """
+Suffix addition modality:
+\t""" + magenta + ' 1 ' + end_fore + """-All
+\t""" + magenta + ' 2 ' + end_fore + """-Alternate
+""")
+            draw_command_arrow()
+            mode = input("Enter a command number: ")
+            try:
+                self.data.add_suffix(suffix, mode)
+            except renamer.NotAValidOption:
+                print(magenta +
+                      '\n-- {} is not a valid option--'.format(mode))
+            else:
+                print(cyan + "\n--Suffix added to new names!--\n")
+                break
 
     def sort_files(self):
         '''
