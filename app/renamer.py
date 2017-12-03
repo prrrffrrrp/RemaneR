@@ -223,9 +223,33 @@ class Renamer:
         for n in [now, then]:
             if not 1 <= n <= len(self.pairs()):
                 raise IndexOutOfRangeError
-        names_cp = self.names
+        names_cp = self.names[:]
         names_cp.insert(then - 1, names_cp.pop(now - 1))
         self.names = names_cp
+
+    def add_suffix(self, suffix, mode):
+        '''
+        Allows adding a suffix to the existing names from the names file.
+        There are two modalities:
+            -All: all the names get the same suffix.
+            -Alternate: each name is duplicated and the suffix is added to the
+            duplicate.
+        In both modalities the suffix is the same for all the files that get
+        one.
+        '''
+        if mode not in ['1', '2']:
+            raise NotAValidOption
+        if mode == '1':
+            self.names = [n + suffix for n in self.names]
+        if mode == '2':
+            names_cp = self.names[:]
+            item = 0
+            for i, n in enumerate(self.names):
+                i += item
+                names_cp.insert(i + 1, (n + suffix))
+                item += 1
+            self.names = names_cp[:]
+            # TO DO: keep a copy of original self.names so the user can revert easily the suffix addition.
 
 
 def extension(file_name, new_name=None):
