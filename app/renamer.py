@@ -4,7 +4,7 @@ from itertools import zip_longest
 from .color_variables import cyan, end_fore
 from .exceptions import PathDoesNotExistError, EmptyDirectoryError,\
     DirectoryNotFoundError, FileDoesNotExistError, FileExtensionNotSupported,\
-    IndexOutOfRangeError, NotAValidOption, DuplicateNamesError
+    IndexOutOfRangeError, NotAValidOption, DuplicateNamesError, RevertSuffix
 
 
 class InputCheckExtract:
@@ -95,6 +95,7 @@ class Renamer:
         '''
         self.files = files
         self.names = names
+        self.names_backup = names
         self.index_width = max((len(str(len(self.files)))),
                                (len(str(len(self.names)))))
         self.path = ''
@@ -197,7 +198,6 @@ class Renamer:
             new_n = os.path.basename(new)
             # Avoid accidental overide
             if old != new and new_n in self.files:
-                # raise FileNameAlreadyExists(os.path.basename(new))
                 new += '_temp'
                 temp_names.append(new)
                 os.rename(old, new)
@@ -237,19 +237,24 @@ class Renamer:
         In both modalities the suffix is the same for all the files that get
         one.
         '''
-        if mode not in ['1', '2']:
+        if mode not in ['1', '2', '3', '4']:
             raise NotAValidOption
         if mode == '1':
             self.names = [n + suffix for n in self.names]
-        if mode == '2':
+        if mode == '2' or mode == '3':
             names_cp = self.names[:]
             item = 0
+            # x is added to the enumerate index to determine where to
+            # insert the suffixed names (before or after the original name).
+            x = 0 if mode == '2' else 1
             for i, n in enumerate(self.names):
                 i += item
-                names_cp.insert(i + 1, (n + suffix))
+                names_cp.insert(i + x, (n + suffix))
                 item += 1
             self.names = names_cp[:]
-            # TO DO: keep a copy of original self.names so the user can revert easily the suffix addition.
+        if mode == '4':
+            self.names = self.names_backup
+            raise RevertSuffix
 
 
 def extension(file_name, new_name=None):

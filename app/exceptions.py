@@ -28,3 +28,7 @@ class NotAValidOption(Exception):
 
 class DuplicateNamesError(Exception):
     pass
+
+
+class RevertSuffix(Exception):
+    pass

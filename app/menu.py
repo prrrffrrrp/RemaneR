@@ -29,7 +29,7 @@ class Editor:
             print(cyan + '''
 \n\t!RemaneR\n
 ''')
-            start = self.menu_map["5"]
+            start = self.menu_map["6"]
             start()
             answer = ''
             while True:
@@ -145,7 +145,9 @@ Menu options:
             print(cyan + """
 Suffix addition modality:
 \t""" + magenta + ' 1 ' + end_fore + """-All
-\t""" + magenta + ' 2 ' + end_fore + """-Alternate
+\t""" + magenta + ' 2 ' + end_fore + """-Alternate. Suffixed before original
+\t""" + magenta + ' 3 ' + end_fore + """-Alternate. Suffixed after original
+\t""" + magenta + ' 4 ' + end_fore + """-Revert. Erase suffix
 """)
             draw_command_arrow()
             mode = input("Enter a command number: ")
@@ -154,6 +156,9 @@ Suffix addition modality:
             except renamer.NotAValidOption:
                 print(magenta +
                       '\n-- {} is not a valid option--'.format(mode))
+            except renamer.RevertSuffix:
+                print(cyan + "\n--Suffixes deleted from names--\n")
+                break
             else:
                 print(cyan + "\n--Suffix added to new names!--\n")
                 break
@@ -187,15 +192,9 @@ Sort files method:
         '''
         Changes the name of the files.
         '''
-        try:
-            self.data.rename()
-        except renamer.FileNameAlreadyExists as e:
-            print(magenta + "\nCan't complete rename operation."
-                  "\nFilename {} already exist and would be overriden.".
-                  format(e.args[0]))
-        else:
-            print(cyan + '\n--Files successfully renamed!--\n')
-            self.quit()
+        self.data.rename()
+        print(cyan + '\n--Files successfully renamed!--\n')
+        self.quit()
 
     def quit(self):
         '''
