@@ -97,9 +97,9 @@ Menu options:
                 print(magenta + "\n--This file extension is not supported!--\n")
             except renamer.DuplicateNamesError as e:
                 print(magenta +
-                      "\n--Name <{}> was found at least twice in the list"
-                      "\nThis could lead to overriding files and loosing data"
-                      "\nPlease make changes to avoid having duplicate names--"
+                      "\n--Name <{}> was found at least twice in the list."
+                      "\nThis could lead to overriding files and loosing data."
+                      "\nPlease make changes to avoid having duplicate names.--"
                       .format(e.args[0]))
             else:
                 names = check_names
@@ -192,9 +192,13 @@ Sort files method:
         '''
         Changes the name of the files.
         '''
-        self.data.rename()
-        print(cyan + '\n--Files successfully renamed!--\n')
-        self.quit()
+        try:
+            self.data.rename()
+        except Exception:
+            print(magenta + "\n--Files cannot be renamed!--\n")
+        else:
+            print(cyan + '\n--Files successfully renamed!--\n')
+            self.quit()
 
     def quit(self):
         '''

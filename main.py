@@ -28,20 +28,23 @@ if __name__ == "__main__":
     if args['--rename']:
         try:
             files = InputCheckExtract().files_to_rename(path)
-        except:
+        except Exception:
             print(magenta + '\n--Files to be renamed not found--')
+            Editor().quit()
         try:
             names = InputCheckExtract().names_file(names)
-        except:
+        except Exception:
             print(magenta +
                   '\n--File containing names not found or not supported--')
+            Editor().quit()
         absolute_path = os.path.abspath(path)
         task = Renamer(files, names)
         task.path = absolute_path
         try:
             task.rename()
-        except:
+        except Exception:
             print(magenta + "\n--Can't rename files!--")
+            Editor().quit()
         else:
             print(cyan + "\n--Files succesfully renamed!--\n" +
                   cyan + "\n\tThanks for using !RemaneR\n")
