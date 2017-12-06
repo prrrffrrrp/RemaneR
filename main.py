@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 '''
 Usage: main.py <path> <names> (-r)
        main.py -i
