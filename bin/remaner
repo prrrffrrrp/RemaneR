@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 '''
-Usage: main.py <path> <names> (-r)
-       main.py -i
-       main.py -h
+Usage: remaner <path> <names> (-r)
+       remaner -i
+       remaner -h
 
 Options:
     -h, --help           : show help page
