@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 from os import path
 
 here = path.abspath(path.dirname(__file__))
@@ -16,7 +16,7 @@ setup(name='remaner',
       author_email='prrrffrrrp@gmail.com',
       license='MIT',
       keywords='rename renamefiles renamefromfile cool cli notboring',
-      packages=find_packages(exclude=['tests']),
+      packages=['app'],
       install_requires=['textract', 'docopt', 'colorama'],
       python_requires='>=3',
       scripts=['bin/remaner'],
