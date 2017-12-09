@@ -19,5 +19,5 @@ setup(name='remaner',
       packages=['app'],
       install_requires=['textract', 'docopt', 'colorama'],
       python_requires='>=3',
-      scripts=['bin/remaner'],
+      scripts=['run.py'],
       zip_safe=False)
