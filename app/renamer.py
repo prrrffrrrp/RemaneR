@@ -1,5 +1,6 @@
 import os
-import textract
+# import textract
+from .extract_docx import get_docx_text
 from itertools import zip_longest
 from .color_variables import cyan, end_fore
 from .exceptions import PathDoesNotExistError, EmptyDirectoryError,\
@@ -23,7 +24,7 @@ class InputCheckExtract:
             raise PathDoesNotExistError
         try:
             files = os.listdir(path)
-        except FileNotFoundError:
+        except Exception:
             raise DirectoryNotFoundError
         else:
             if files == []:
@@ -58,8 +59,8 @@ class InputCheckExtract:
             raise FileDoesNotExistError(filename)
         try:
             names = set()
-            extract = textract.process(path_to_file).decode('utf8')
-        except textract.exceptions.ExtensionNotSupported:
+            extract = get_docx_text(path_to_file)
+        except Exception:
             raise FileExtensionNotSupported
         else:
             if '\n' in extract:
