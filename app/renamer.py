@@ -59,7 +59,8 @@ class InputCheckExtract:
             raise FileDoesNotExistError(filename)
         try:
             names = set()
-            extract = get_docx_text(path_to_file)
+            # extract = get_docx_text(path_to_file)
+            extract = GetText(path_to_file, filename)
         except Exception:
             raise FileExtensionNotSupported
         else:
@@ -83,6 +84,26 @@ class InputCheckExtract:
                     raise DuplicateNamesError(name)
             return extract
 
+
+class GetText:
+    '''
+    Gets the names-file extension and calls the appropriate text
+    extractor.
+    '''
+    def init(self, path_to_file, filename):
+        self.path_to_file = path_to_file
+        self.filename = filename
+        self.extension = extension(self.filename)
+        self.extension_map = {
+            '.docx': self.extract_docx,
+            '.txt': self.extract_txt
+        }
+
+    def extension_mapper(self):
+        pass
+
+    def extract_docx(self, path_to_file):
+        pass
 
 class Renamer:
     '''
