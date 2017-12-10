@@ -61,7 +61,7 @@ class InputCheckExtract:
             names = set()
             # extract = get_docx_text(path_to_file)
             extract = GetText(path_to_file, filename)
-        except Exception:
+        except KeyError:
             raise FileExtensionNotSupported
         else:
             if '\n' in extract:
@@ -90,20 +90,47 @@ class GetText:
     Gets the names-file extension and calls the appropriate text
     extractor.
     '''
-    def init(self, path_to_file, filename):
+    def __init__(self, path_to_file, filename):
         self.path_to_file = path_to_file
         self.filename = filename
         self.extension = extension(self.filename)
         self.extension_map = {
             '.docx': self.extract_docx,
-            '.txt': self.extract_txt
+            '.txt': self.extract_txt,
+            '.xlsx': self.extract_xlsx,
+            '.xls': self.extract_xls,
+            '.csv': self.extract_csv,
+            '.odt': self.extract_odt,
+            '.odf': self.extract_odf,
         }
+        try:
+            mapper = self.extension_map[self.extension]
+        except KeyError:
+            raise KeyError
+        else:
+            mapper()
 
-    def extension_mapper(self):
+    def extract_docx(self):
         pass
 
-    def extract_docx(self, path_to_file):
+    def extract_txt(self):
         pass
+
+    def extract_xlsx(self):
+        pass
+
+    def extract_xls(self):
+        pass
+
+    def extract_csv(self):
+        pass
+
+    def extract_odt(self):
+        pass
+
+    def extract_odf(self):
+        pass
+
 
 class Renamer:
     '''

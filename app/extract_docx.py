@@ -33,7 +33,3 @@ def get_docx_text(path):
             paragraphs.append(''.join(texts))
 
     return '\n'.join(paragraphs)
-
-
-# path = '/home/kasia/Arnau/Program/namescoma.odt'
-# print(get_docx_text(path))
