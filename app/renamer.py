@@ -60,7 +60,8 @@ class InputCheckExtract:
         try:
             names = set()
             # extract = get_docx_text(path_to_file)
-            extract = GetText(path_to_file, filename)
+            text = GetText(path_to_file, filename)
+            extract = text.content
         except KeyError:
             raise FileExtensionNotSupported
         else:
@@ -93,7 +94,8 @@ class GetText:
     def __init__(self, path_to_file, filename):
         self.path_to_file = path_to_file
         self.filename = filename
-        self.extension = extension(self.filename)
+        self.extension = os.path.splitext(filename)[1]
+        self.content = ''
         self.extension_map = {
             '.docx': self.extract_docx,
             '.txt': self.extract_txt,
@@ -111,10 +113,13 @@ class GetText:
             mapper()
 
     def extract_docx(self):
-        pass
+        text = get_docx_text(self.path_to_file)
+        return text
 
     def extract_txt(self):
-        pass
+        with open(self.path_to_file, 'r') as f:
+            text = f.read()
+        self.content = text
 
     def extract_xlsx(self):
         pass
@@ -314,10 +319,7 @@ def extension(file_name, new_name=None):
     '''
     if file_name == '-*-' or new_name == '-*-':
         return ''
-    for i in range(len(file_name)-1, 0, -1):
-        if file_name[i] == '.':
-            return file_name[i:]
-    return ''
+    return os.path.splitext(file_name)[1]
 
 
 def natural_key(string_):
