@@ -1,4 +1,5 @@
 import os
+import csv
 # import textract
 from .extract_docx import get_docx_text
 from itertools import zip_longest
@@ -128,7 +129,12 @@ class GetText:
         pass
 
     def extract_csv(self):
-        pass
+        with open(self.path_to_file) as f:
+            readcsv = csv.reader(f, delimiter=',')
+            text = ''
+            for row in readcsv:
+                text += row[0] + ','
+        self.content = text
 
     def extract_odt(self):
         pass
