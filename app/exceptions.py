@@ -32,3 +32,7 @@ class DuplicateNamesError(Exception):
 
 class RevertSuffix(Exception):
     pass
+
+
+class SpecifyRowPlease(Exception):
+    pass

@@ -95,6 +95,15 @@ Menu options:
                       "\n--Can't find file {}!--\n".format(e.filename))
             except renamer.FileExtensionNotSupported:
                 print(magenta + "\n--This file extension is not supported!--\n")
+            except renamer.SpecifyRowPlease:
+                # To do:
+                #   Derive to a class that :
+                #   -verifies the number of rows in the file (?)
+                #   -asks the user for the row containing the relevant data
+                #   -handles the corresponding exceptions
+                #   -redirects to the appropriate method to read the file
+                print("Here you will need to specify a row number if necessary")
+                continue
             except renamer.DuplicateNamesError as e:
                 print(magenta +
                       "\n--Name <{}> was found at least twice in the list."

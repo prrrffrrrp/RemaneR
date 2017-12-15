@@ -6,7 +6,8 @@ from itertools import zip_longest
 from .color_variables import cyan, end_fore
 from .exceptions import PathDoesNotExistError, EmptyDirectoryError,\
     DirectoryNotFoundError, FileDoesNotExistError, FileExtensionNotSupported,\
-    IndexOutOfRangeError, NotAValidOption, DuplicateNamesError, RevertSuffix
+    IndexOutOfRangeError, NotAValidOption, DuplicateNamesError, RevertSuffix,\
+    SpecifyRowPlease
 
 
 class InputCheckExtract:
@@ -109,8 +110,10 @@ class GetText:
         try:
             mapper = self.extension_map[self.extension]
         except KeyError:
-            raise KeyError
+            raise FileExtensionNotSupported
         else:
+            if self.extension in ['.csv', '.xlsx', '.xls', '.odf']:
+                raise SpecifyRowPlease
             mapper()
 
     def extract_docx(self):
