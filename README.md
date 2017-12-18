@@ -1,8 +1,8 @@
 
-RemaneR
+!RemaneR
 ========
 
-RemaneR is a cli program to rename files using a list of names supplied
+!RemaneR is a cli program to rename files using a list of names supplied
 in a separated file.
 -------------
 
