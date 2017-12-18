@@ -1,11 +1,11 @@
 
-    # !RemaneR
+    !RemaneR
     ========
 
     ###### ! RemaneR is a cli program to rename files using a list of names supplied
     in a separated file.
 
-    =========================================================================
+    ----------
     ### Usage:
 
     The user have two options:
@@ -34,7 +34,7 @@
     The .xlsx files should contain only one column with names,
     to work properly.
 
-    ==========================================================================
+ ----------
     ### Work in progress:
     
     Because the it can be trycky to install the textract module and because it
