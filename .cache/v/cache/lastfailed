@@ -1,5 +1,6 @@
 {
   "test_renamer_ex1.py::TestInputCheckExtract::()::test_files_to_rename": true,
   "test_renamer_ex1.py::TestRenamer::()::test_Renamer_rename": true,
-  "test_renamer_ex1.py::TestRenamer::()::test_Renamer_self": true
+  "test_renamer_ex1.py::TestRenamer::()::test_Renamer_self": true,
+  "tests/test_remaner_ex1.py::TestRenamer::()::test_Renamer_rename": true
 }
