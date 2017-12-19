@@ -8,18 +8,23 @@ from app.exceptions import DuplicateNamesError
 absolute = os.getcwd()
 temp_test_dir_files = absolute + os.sep + 'temp_test_dir_files'
 temp_test_dir_names = absolute + os.sep + 'temp_test_dir_names'
-
+# use os.path.join, i.e.: temp_test_dir_files = os.path.join(absolute, 'temp_test_dir_files')
+# I would go rather with tempfile.mkdtemp for output instead of hardcoded one, but It's personal opinion
 
 def setup_module(module):
     # make temporary directory with files (to be renamed)
     os.mkdir(temp_test_dir_files)
     for i in range(1, 6):
         open(temp_test_dir_files + '/f_{}.txt'.format(i), 'w+')
+        # not closing newly created files, I would use tempfile.mkstemp
+        # w+ is for append, just use w (truncate existing and write)
 
     # create directory with a file containing filenames
     os.mkdir(temp_test_dir_names)
     with open(os.path.join(
             temp_test_dir_names + os.sep + 'names.txt'), 'w+') as names:
+            # invalid use of os.path.join, should be os.path.join(temp_test_dir_names, 'names.txt'), os.sep is unnecessary
+            # w+ mode is for append, just use w (truncate existing and write)
         names.write('orange, lemon, apple, plum, banana')
 
 
@@ -46,15 +51,18 @@ class TestInputCheckExtractDuplicates:
     def setup_method(self, method):
         with open(os.path.join(
                   temp_test_dir_names + os.sep + 'names.txt'), 'a') as names:
+            # invalid use of os.path.join
             names.write(', lemon')
 
     def teardown_method(self, method):
         with open(os.path.join(
                     temp_test_dir_names + os.sep + 'names.txt'), 'w') as names:
+            # invalid use of os.path.join
             names.write('orange, lemon, apple, plum, banana')
 
     def test_duplicate_names(self):
         txt_file = temp_test_dir_names + os.sep + 'names.txt'
+        # use os.path.join
         with pytest.raises(DuplicateNamesError) as excinfo:
             InputCheckExtract().names_file(txt_file)
         assert "lemon" in str(excinfo.value)

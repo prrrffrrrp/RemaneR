@@ -31,17 +31,17 @@ if __name__ == "__main__":
         try:
             files = InputCheckExtract().files_to_rename(path)
         except Exception:
-            print(magenta + '\n--Files to be renamed not found--')
+            print(magenta + '\n--Files to be renamed not found--') #add path to output
             Editor().quit()
         try:
             names = InputCheckExtract().names_file(names)
         except Exception:
             print(magenta +
-                  '\n--File containing names not found or not supported--')
+                  '\n--File containing names not found or not supported--') #add path to output
             Editor().quit()
         absolute_path = os.path.abspath(path)
         task = Renamer(files, names)
-        task.path = absolute_path
+        task.path = absolute_path # add path via constructor too
         try:
             task.rename()
         except Exception:

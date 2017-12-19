@@ -3,6 +3,19 @@ __pycache__
 .*.swp
 *.swp
 *.swo
-tests/
-.gitignore
+
+#tests/
+# Tests already added and versioned, then ignored. Looks like old versions of tests still in repo, new updates to tests aren't commited
+
+#.gitignore
+# don't ignore .gitignore file, to ignore files only in your repo use '.git/info/exclude`
+
+# add .cache to ignore and remove from repository `git checkout .cache && git rm -r .cache`
+.cache/
+
 remaner.egg-info
+
+#mzc
+.python-version
+*.iml
+.idea/

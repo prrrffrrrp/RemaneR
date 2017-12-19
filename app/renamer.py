@@ -11,6 +11,7 @@ class InputCheckExtract:
     '''
     Checks user input (paths and files) for validity and extracts data.
     '''
+    # use """ for docstrings
     def files_to_rename(self, path):
         '''
         The path argument should contain the path to the files that
@@ -20,7 +21,7 @@ class InputCheckExtract:
         '''
 
         if not os.path.exists(path):
-            raise PathDoesNotExistError
+            raise PathDoesNotExistError # I would use built-in FileNotFoundError
         try:
             files = os.listdir(path)
         except FileNotFoundError:

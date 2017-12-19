@@ -2,10 +2,12 @@ import os
 import pytest
 from app.renamer import InputCheckExtract, Renamer
 
+# Test failing, missing directory ev1 with test content. No setup procedure?
 
 absolute = os.getcwd()
 temp_test_dir_files = absolute + os.sep + 'tests' + os.sep + 'example_files' + os.sep + 'ex1'
 temp_test_dir_names_2 = absolute + os.sep + 'tests' + os.sep + 'example_files' + os.sep + 'ex1_2.txt'
+# use os.path.join
 
 
 class TestInputCheckExtract:
