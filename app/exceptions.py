@@ -1,16 +1,4 @@
-class PathDoesNotExistError(Exception):
-    pass
-
-
 class EmptyDirectoryError(Exception):
-    pass
-
-
-class DirectoryNotFoundError(Exception):
-    pass
-
-
-class FileDoesNotExistError(Exception):
     pass
 
 
