@@ -4,3 +4,7 @@ __pycache__
 *.swp
 *.swo
 remaner.egg-info
+.cache/
+.python-version
+*.iml
+.idea/
