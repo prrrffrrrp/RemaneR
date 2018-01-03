@@ -12,6 +12,9 @@ class InputCheckExtract:
     Checks user input (paths and files) for validity and extracts data.
     '''
     # use """ for docstrings
+    # no method of this class use internal state (self) so all methods should be static
+    # or even just functions of module
+
     def files_to_rename(self, path):
         '''
         The path argument should contain the path to the files that
@@ -27,7 +30,7 @@ class InputCheckExtract:
         except FileNotFoundError:
             raise DirectoryNotFoundError
         else:
-            if files == []:
+            if files == []: # just use `if files:`
                 raise EmptyDirectoryError
             else:
                 files = sorted(files, key=natural_key)
@@ -76,6 +79,9 @@ class InputCheckExtract:
                 if ',' in extract[0]:
                     extract = extract[0].split(',')
             extract = [name.strip() for name in extract if not name == '']
+
+            # In my opinion, below block it's not necessary. Set always contains unique elements, even if you
+            # put duplicates there.
             for name in extract:
                 if name not in names:
                     names.add(name)
@@ -89,6 +95,9 @@ class Renamer:
     Class that contains all the core features that allow to manipulate
     the data entered by the user.
     '''
+    # This class violates "single responsibility principle". It contains logic for renaming files and displaying info
+    # terminal
+
     def __init__(self, files, names):
         '''
         Initializes an instance with a list of files and a list of names that
@@ -264,6 +273,10 @@ def extension(file_name, new_name=None):
     It can be used to add the same extension to the new name that
     will be given to the current file.
     '''
+
+    # Just use `os.path.splitext` method of string, i.e:
+    # file,ext = os.path.splitext(file_name)
+
     if file_name == '-*-' or new_name == '-*-':
         return ''
     for i in range(len(file_name)-1, 0, -1):
