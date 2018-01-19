@@ -20,22 +20,23 @@ def setup_temps(request):
     with open(os.path.join(temp_test_dir_names, 'names.txt'), 'w') as names:
         names.write('orange, lemon, apple, plum, banana')
 
+    def teardown_temps():
+        ''' Remove the temp directory and namesFile '''
+        shutil.rmtree(temp_test_dir_files)
+        shutil.rmtree(temp_test_dir_names)
 
-def teardown_module(module):
-    ''' Remove the temp directory and namesFile '''
-    shutil.rmtree(temp_test_dir_files)
-    shutil.rmtree(temp_test_dir_names)
+    request.addfinalizer(teardown_temps)
 
 
 class TestInputCheckExtract:
-    def test_files_to_rename(self):
+    def test_files_to_rename(self, setup_temps):
         path1 = temp_test_dir_files
         path2 = os.path.abspath(temp_test_dir_files)
         files = ['f_1.txt', 'f_2.txt', 'f_3.txt', 'f_4.txt', 'f_5.txt']
         assert InputCheckExtract().files_to_rename(path1) == files
         assert InputCheckExtract().files_to_rename(path2) == files
 
-    def test_names_file(self):
+    def test_names_file(self, setup_temps):
         txt_file = temp_test_dir_names + os.sep + 'names.txt'
         names = ['orange', 'lemon', 'apple', 'plum', 'banana']
         assert InputCheckExtract().names_file(txt_file) == names
