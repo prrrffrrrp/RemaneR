@@ -65,6 +65,9 @@ class InputCheckExtract:
         except KeyError:
             raise FileExtensionNotSupported
         else:
+            # TO DO:
+            # Better to check for an '\n' at the end of line first and remove it
+            # if there is one.
             if '\n' in extract:
                 extract = extract.splitlines()
             if ',' in extract:

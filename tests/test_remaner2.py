@@ -1,23 +1,22 @@
 import os
 import shutil
 import pytest
+import tempfile
 from app.renamer import InputCheckExtract, Renamer, extension, natural_key
 from app.exceptions import DuplicateNamesError
 
-
 absolute = os.getcwd()
-temp_test_dir_files = os.path.join(absolute, 'temp_test_dir_files')
-temp_test_dir_names = os.path.join(absolute, 'temp_test_dir_names')
+temp_test_dir_files = tempfile.mkdtemp()
+temp_test_dir_names = tempfile.mkdtemp(suffix='_1')
 
 
-def setup_module(module):
+@pytest.fixture(scope="module")
+def setup_temps(request):
     # make temporary directory with files (to be renamed)
-    os.mkdir(temp_test_dir_files)
     for i in range(1, 6):
         open(temp_test_dir_files + '/f_{}.txt'.format(i), 'w')
 
     # create directory with a file containing filenames
-    os.mkdir(temp_test_dir_names)
     with open(os.path.join(temp_test_dir_names, 'names.txt'), 'w') as names:
         names.write('orange, lemon, apple, plum, banana')
 
