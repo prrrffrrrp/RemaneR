@@ -4,8 +4,7 @@ from .extract_docx import get_docx_text
 from itertools import zip_longest
 from .color_variables import cyan, end_fore
 from .exceptions import EmptyDirectoryError, FileExtensionNotSupported,\
-IndexOutOfRangeError, NotAValidOption, DuplicateNamesError, RevertSuffix, \
-SpecifyRowPlease
+    IndexOutOfRangeError, NotAValidOption, DuplicateNamesError, RevertSuffix
 
 
 class InputCheckExtract:

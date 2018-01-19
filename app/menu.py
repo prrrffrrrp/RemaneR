@@ -4,11 +4,11 @@ from .color_variables import cyan, magenta, draw_command_arrow, end_fore
 
 
 class Editor:
-    '''
+    """
     Class Editor contains the interactive cli interface.
     Its methods often just trigger the Renamer class methods
     but also handle all the exceptions.
-    '''
+    """
     def __init__(self):
         self.data = ()
         self.menu_map = {
@@ -22,13 +22,13 @@ class Editor:
         }
 
     def menu(self):
-        '''
+        """
         Shows the main menu options until the program is stopped.
-        '''
+        """
         try:
-            print(cyan + '''
+            print(cyan + """
 \n\t!RemaneR\n
-''')
+""")
             start = self.menu_map["6"]
             start()
             answer = ''
@@ -56,12 +56,12 @@ Menu options:
             print(cyan + '\n\tThanks for using !RemaneR\n')
 
     def input_new_data(self):
-        '''
+        """
         Asks for the paths leading to the files to be renamed and to the file
         containing the new names.
         Then checks for validity, extracts the data and creates a Renamer
         object.
-        '''
+        """
         files = []
         path = ''
         names = []
@@ -72,9 +72,7 @@ Menu options:
                                  'your files to be renamed: ')
                 check_files = renamer.InputCheckExtract().files_to_rename(
                                                                        ask_path)
-            except renamer.PathDoesNotExistError:
-                print(magenta + '\n--That path does not seem to exist!--\n')
-            except renamer.DirectoryNotFoundError:
+            except FileNotFoundError:
                 print(magenta + '\n--Directory not found!--\n')
             except renamer.EmptyDirectoryError:
                 print(magenta + '\n--This directory is empty!--\n')
@@ -88,9 +86,9 @@ Menu options:
                 ask_names = input(
                     'Enter path to the file containing new file names: ')
                 check_names = renamer.InputCheckExtract().names_file(ask_names)
-            except renamer.PathDoesNotExistError:
+            except FileNotFoundError:
                 print(magenta + "\n--This path does not seem to exist!--\n")
-            except renamer.FileDoesNotExistError as e:
+            except FileNotFoundError as e:
                 print(magenta +
                       "\n--Can't find file {}!--\n".format(e.filename))
             except renamer.FileExtensionNotSupported:
@@ -117,18 +115,18 @@ Menu options:
         self.data.path = path
 
     def preview(self):
-        '''
+        """
         Triggers the display method showing a preview of a list of
         files to be renamed side by side with the new names.
-        '''
+        """
         self.data.display()
 
     def change_position(self):
-        '''
+        """
         Allows changing the position of name items in the names list.
         The user needs to enter the original index number of the item
         and the index number of the new item's position in the names list.
-        '''
+        """
         print()
         draw_command_arrow()
         now = input("Enter the origin index number: ")
@@ -144,10 +142,10 @@ Menu options:
             print(cyan + "\n--Name position changed--\n")
 
     def add_suffix_menu(self):
-        '''
+        """
         Menu interface for the Renamer.add_suffix method.
         Allows adding a suffix to new names.
-        '''
+        """
         draw_command_arrow()
         suffix = input("Enter a suffix: ")
         while True:
@@ -173,10 +171,10 @@ Suffix addition modality:
                 break
 
     def sort_files(self):
-        '''
+        """
         Allows sorting the list of files to be renamed.
         The default is alphabetical order.
-        '''
+        """
         sort_method = ''
         while True:
             print(cyan + """
@@ -198,9 +196,9 @@ Sort files method:
                 break
 
     def apply_rename(self):
-        '''
+        """
         Changes the name of the files.
-        '''
+        """
         try:
             self.data.rename()
         except Exception:
@@ -210,7 +208,7 @@ Sort files method:
             self.quit()
 
     def quit(self):
-        '''
+        """
         Exits the program.
-        '''
+        """
         raise SystemExit()

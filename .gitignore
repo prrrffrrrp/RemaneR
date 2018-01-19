@@ -3,6 +3,8 @@ __pycache__
 .*.swp
 *.swp
 *.swo
-tests/
-.gitignore
 remaner.egg-info
+.cache/
+.python-version
+*.iml
+.idea/
