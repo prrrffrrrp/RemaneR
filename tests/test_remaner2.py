@@ -3,7 +3,7 @@ import shutil
 import pytest
 import tempfile
 from app.renamer import InputCheckExtract, Renamer, extension, natural_key
-from app.exceptions import DuplicateNamesError
+from app.exceptions import DuplicateNamesError, EmptyDirectoryError
 
 absolute = os.getcwd()
 temp_test_dir_files = tempfile.mkdtemp()
@@ -52,10 +52,19 @@ class TestInputCheckExtractDuplicates:
             names.write('orange, lemon, apple, plum, banana')
 
     def test_duplicate_names(self):
-        txt_file = temp_test_dir_names + os.sep + 'names.txt'
+        txt_file = os.path.join(temp_test_dir_names, 'names.txt')
         with pytest.raises(DuplicateNamesError) as excinfo:
             InputCheckExtract().names_file(txt_file)
         assert "lemon" in str(excinfo.value)
+
+
+class TestInputCheckExtractEmptyDirectoryError:
+    @pytest.fixture(scope="class")
+    def setup_method(request):
+        empty_dir = tempfile.mkdtemp()
+        with pytest.raises(EmptyDirectoryError) as excinfo:
+            InputCheckExtract().files_to_rename(os.path.abspath(empty_dir))
+        assert "empty!" in str(excinfo.value)
 
 
 class TestRenamer:

@@ -8,3 +8,4 @@ remaner.egg-info
 .python-version
 *.iml
 .idea/
+venv/*
