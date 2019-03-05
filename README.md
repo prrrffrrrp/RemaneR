@@ -35,16 +35,15 @@ At this point the main dependency of !RemaneR is the Textract module.
 !RemaneR will accept any file extension supported by Textract as a source
 of new names but only .txt, .docx, .odt and .xlsx extensions have been 
 tested. 
-In addition to work properly, the names in the list of names contained by
+In addition, to work properly, the names in the list of names contained by
 the file, should be either comma separated or separated by a new line 
 character.
-The .xlsx files should contain only one column with names,
-to work properly.
+The .xlsx files should contain only one column with names.
 
 ----------
 #### Work in progress:
 
-Because the it can be trycky to install the Textract module and because it
+Because it can be trycky to install the Textract module and because it
 does way more than it is strictly necessary in !RemaneR, I'm working in a
 version that will be Textract free.You can find it in the _nodependency_ branch. 
 
